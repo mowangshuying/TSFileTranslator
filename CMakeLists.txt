@@ -16,8 +16,8 @@ set(CMAKE_PREFIX_PATH "C:\\Qt\\6.5.1\\msvc2019_64")
 
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
 if(QT_VERSION VERSION_GREATER_EQUAL "6.2")
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Svg Charts Core5Compat)
-find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Charts Core5Compat)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Svg Charts Core5Compat Xml)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Charts Core5Compat Xml)
 if (USE_QRC)
 if (MSVC_IDE)
 	message(STATUS "Qt6Widgets_LIBRARIES: ${Qt6Widgets_LIBRARIES}")
@@ -93,8 +93,9 @@ target_link_libraries(${TGT}
     FluUtils
     qscintilla
     qrcode
-    Qt${QT_VERSION_MAJOR}::Charts
-    Qt${QT_VERSION_MAJOR}::Core5Compat
+    Qt6::Charts
+    Qt6::Core5Compat
+    Qt6::Xml
     qwindowkit
     qtadvanceddocking-qt6
 )
@@ -106,7 +107,8 @@ target_link_libraries(${TGT}
     FluUtils
     qscintilla
     qrcode
-    Qt${QT_VERSION_MAJOR}::Charts
+    Qt5::Charts
+    Qt5::Xml
     qwindowkit
     qtadvanceddocking-qt5
 )
