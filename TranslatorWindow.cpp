@@ -14,6 +14,9 @@
 
 TranslatorWindow::TranslatorWindow(QWidget* parent /*= nullptr*/) : FluWindowKitWindow(parent)
 {
+	TongYiOpenAi::__init("https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+		"sk-c43463e3702d452fa7d873efb7808eae");
+
 	__initUI();
 
 	__connect();
@@ -198,6 +201,16 @@ __Xml TranslatorWindow::__read(QString filepath)
 
 	file.close();
 	return xml;
+}
+
+void TranslatorWindow::__translate(QString sourceLang, QString targetLang, QString source)
+{
+	Json json;
+	json["model"] = "qwen-mt-plus";
+	json["messages"] = { { {"role", "user"}, {"content", sourceLang} } };
+	json["translation_options"] = { {"source_lang", sourceLang},{"target_lang", targetLang}};
+	auto _json = TongYiOpenAi::completion().create(json);
+	LOG_DEBUG << "_json:" << _json.dump().c_str();
 }
 
 void TranslatorWindow::__translate(__Xml& xml)
