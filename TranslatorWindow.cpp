@@ -10,6 +10,9 @@
 //#include <QDomComment>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <TongYiOpenAi.hpp>
+#include <QThread>
+
 
 
 TranslatorWindow::TranslatorWindow(QWidget* parent /*= nullptr*/) : FluWindowKitWindow(parent)
@@ -203,24 +206,47 @@ __Xml TranslatorWindow::__read(QString filepath)
 	return xml;
 }
 
-void TranslatorWindow::__translate(QString sourceLang, QString targetLang, QString source)
+QString TranslatorWindow::__translate(QString sourceLang, QString targetLang, QString source)
 {
 	Json json;
 	json["model"] = "qwen-mt-plus";
-	json["messages"] = { { {"role", "user"}, {"content", sourceLang} } };
-	json["translation_options"] = { {"source_lang", sourceLang},{"target_lang", targetLang}};
+	json["messages"] = Json::array();
+
+	//json["messages"].push_back();
+
+	Json message;
+	message["role"] = "user";
+	message["content"] = source.toStdString();
+	json["messages"].push_back(message);
+
+	Json translationOptions;
+	translationOptions["source_lang"] = sourceLang.toStdString();
+	translationOptions["target_lang"] = targetLang.toStdString();
+
+	json["translation_options"] = translationOptions;
+
+	//json["messages"] = { { {"role", "user"}, {"content", sourceLang} } };
+	//json["translation_options"] = { {"source_lang", sourceLang},{"target_lang", targetLang}};
+
+
 	auto _json = TongYiOpenAi::completion().create(json);
 	LOG_DEBUG << "_json:" << _json.dump().c_str();
+	//return QString(_json["choices"][0]["message"]["content"]);
+	std::string content =  _json["choices"][0]["message"]["content"];
+	QString dest =  QString::fromUtf8(content);
+	return dest;
 }
 
 void TranslatorWindow::__translate(__Xml& xml)
 {
-	for (auto context : xml.contexts)
+	for (auto& context : xml.contexts)
 	{
-		for (auto message : context.messages)
+		for (auto& message : context.messages)
 		{
 			QString s = message.source;
-			QString t;
+			QString t = __translate("English", "Japanese", s);
+			QThread::msleep(5000);
+			message.translation.translation = t;
 		}
 	}
 }
@@ -330,5 +356,6 @@ void TranslatorWindow::__onTriggerAbout(bool b)
 void TranslatorWindow::__onTriggerTranslate(bool b)
 {
 	__Xml xml = __read(m_xmlFilePath);
+	__translate(xml);
 	__write("__write.xml", xml);
 }

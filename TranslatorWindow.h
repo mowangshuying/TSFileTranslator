@@ -7,7 +7,7 @@
 #include <FluAction.h>
 #include <list>
 #include <QString>
-#include <TongYiOpenAi.hpp>
+//#include <TongYiOpenAi.hpp>
 
 class Location {
 public:
@@ -82,7 +82,7 @@ public:
 
     __Xml __read(QString filepath);
 
-    void __translate(QString sourceLang, QString targetLang, QString source);
+    QString __translate(QString sourceLang, QString targetLang, QString source);
     void __translate(__Xml& xml);
     void __write(QString filepath, __Xml xml);
 public slots:

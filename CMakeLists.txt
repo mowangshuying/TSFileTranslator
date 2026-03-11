@@ -98,6 +98,7 @@ target_link_libraries(${TGT}
     Qt6::Xml
     qwindowkit
     qtadvanceddocking-qt6
+    ${HV_LIBRARIES}
 )
 
 else()
@@ -111,6 +112,7 @@ target_link_libraries(${TGT}
     Qt5::Xml
     qwindowkit
     qtadvanceddocking-qt5
+    ${HV_LIBRARIES}
 )
 endif()
 
