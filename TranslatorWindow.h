@@ -100,6 +100,7 @@ signals:
     void __translateEnd();
     void __translateValueChanged(int c, int t);
     void __translateProgress(QString p);
+    void __translateError(QString error);
 public slots:
     void __onTriggerOpenFile(bool b = false);
     void __onTriggerOpenConfigFile(bool b = false);

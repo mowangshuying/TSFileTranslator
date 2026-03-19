@@ -471,11 +471,20 @@ void TranslatorWindow::__onTriggerTranslate(bool b)
 		return;
 	}
 
+	FluMessageBox messageBox(tr("Translate Progress."), tr(""), this);
+	connect(this, &TranslatorWindow::__translateProgress, &messageBox, &FluMessageBox::setInfo);
+	connect(this, &TranslatorWindow::__translateError, &messageBox, &FluMessageBox::setInfo);
+
 	std::thread __thread([=]() {
 		emit __translateStart();
 		m_translateState = TranslateState::Working;
 
 		__Xml xml = __read(m_xmlFilePath);
+		if (xml.contexts.size() == 0)
+		{
+			emit __translateError("Nothing need translate.");
+		}
+
 		__translate(xml);
 		__write("__write.xml", xml);
 		
@@ -486,9 +495,6 @@ void TranslatorWindow::__onTriggerTranslate(bool b)
 		});
 
 	__thread.detach();
-
-	FluMessageBox messageBox(tr("Translate Progress."), tr(""), this);
-	connect(this, &TranslatorWindow::__translateProgress, &messageBox, &FluMessageBox::setInfo);
 	messageBox.exec();
 
 }
