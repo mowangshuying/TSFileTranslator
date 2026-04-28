@@ -474,7 +474,14 @@ void TranslatorWindow::__onTriggerAbout(bool b)
 void TranslatorWindow::__onTriggerSettings(bool b)
 {
 	SettingsDlg settingsDlg(this);
-	settingsDlg.exec();
+	int nExec = settingsDlg.exec();
+    if (nExec != QDialog::Accepted)
+    {
+        return;
+    }
+
+	loadConfig();
+	TongYiOpenAi::__init(m_httpurl.toStdString(), m_token.toStdString());
 }
 
 void TranslatorWindow::__onTriggerTranslate(bool b)
