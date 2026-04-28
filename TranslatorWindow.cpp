@@ -25,10 +25,11 @@
 #include <FluComboBoxEx.h>
 #include <QThread>
 #include <FluUtils.h>
+#include "SettingsDlg.h"
 
 
 TranslatorWindow::TranslatorWindow(QWidget* parent /*= nullptr*/) : FluWindowKitWindow(parent)
-{
+{   
 	m_translateState = TranslateState::Ready;
 
 	loadConfig();
@@ -50,60 +51,80 @@ void TranslatorWindow::loadConfig()
 
 void TranslatorWindow::__initUI()
 {
-	setWindowTitle("TS File Translator");
+	setWindowTitle(tr("TS File Translator"));
+
+   
+   FluDockManager::setConfigFlag(FluDockManager::OpaqueSplitterResize, true);
+   FluDockManager::setConfigFlag(FluDockManager::XmlCompressionEnabled, false);
+   FluDockManager::setConfigFlag(FluDockManager::FocusHighlighting, true);
+
+   m_dockMgr = new FluDockManager(this);
 
 	/// menu;
 	__initMenu();
-	
-	/// editor;
+
+		/// editor;
 	m_editor = new FluScintilla(this);
-	setCentralWidget(m_editor);
+	// setCentralWidget(m_editor);
+
+	auto centralDockWidget = m_dockMgr->createDockWidget("CentralWidget", this);
+	centralDockWidget->setWidget(m_editor);
+	auto centralDockArea = m_dockMgr->setCentralWidget(centralDockWidget);
+	centralDockArea->setAllowedAreas(ads::DockWidgetArea::OuterDockAreas);
+
+	m_outputWindow = new OutputWindow(this);
+	// set readonly
+
+
+	//m_outputWindow->setMarginLineNumbers(0, false);
+	//m_outputWindow->setMarginWidth(0, 0);
+	auto outputDockWidget = m_dockMgr->createDockWidget("OutputWidget", this);
+	outputDockWidget->setWidget(m_outputWindow);
+	outputDockWidget->setMinimumSizeHintMode(ads::CDockWidget::MinimumSizeHintFromDockWidget);
+	// outputDockWidget->setMaximumHeight(300);
+	m_dockMgr->addDockWidget(ads::BottomDockWidgetArea, outputDockWidget);
+
+	m_listView = new FluListView(this);
+	m_listView->setNoBorder(true);
+	m_listView->setContextMenuPolicy(Qt::CustomContextMenu);
+	auto listDockWidget = m_dockMgr->createDockWidget("ListWidget", this);
+	listDockWidget->setWidget(m_listView);
+	listDockWidget->setMinimumSizeHintMode(ads::CDockWidget::MinimumSizeHintFromDockWidget);
+	// listDockWidget->setMaximumWidth(300);
+	m_dockMgr->addDockWidget(ads::LeftDockWidgetArea, listDockWidget);
 }
 
 void TranslatorWindow::__initMenu()
 {
-	m_fileMenu = new FluMenu;
-	m_fileMenu->setTitle("File(&F)");
-
-	m_openFileAction = new FluAction("Open(&O)");
-	m_openConfigFileAction = new FluAction("Open Config File...");
-
-	m_saveFileAction = new FluAction("Save(&S)");
-	m_saveAsFileAction = new FluAction("Save As");
-	m_exitAction = new FluAction("Exit");
-	
-	m_fileMenu->addAction(m_openFileAction);
-	m_fileMenu->addAction(m_openConfigFileAction);
-	m_fileMenu->addAction(m_saveFileAction);
-	m_fileMenu->addAction(m_saveAsFileAction);
-	m_fileMenu->addAction(m_exitAction);
-
-	m_operMenu = new FluMenu;
-	m_operMenu->setTitle("Operation(&O)");
-	m_translateAction = new FluAction("Translate");
-
-	m_operMenu->addAction(m_translateAction);
-
-	m_helpMenu = new FluMenu;
-	m_helpMenu->setTitle("Help(&H)");
-
-	m_aboutAction = new FluAction("About TSFileTranslator.");
-	m_helpMenu->addAction(m_aboutAction);
-
-	m_menuBar->addAction(m_fileMenu->menuAction());
-	m_menuBar->addAction(m_operMenu->menuAction());
-	m_menuBar->addAction(m_helpMenu->menuAction());
+	m_contextMenu = new FluRoundMenu("", FluAwesomeType::None, this);
+	m_openFileAction = new FluAction( FluAwesomeType::OpenFile, tr("Open"));
+	m_delteFileAction = new FluAction( FluAwesomeType::Delete, tr("Delete"));
+	m_settingsAction = new FluAction( FluAwesomeType::Settings, tr("Settings"));
+	m_translateAction = new FluAction( FluAwesomeType::Next, tr("Translate"));
+	//m_contextMenu->addAction(m_openFileAction);
+	//m_contextMenu->addAction(m_delteFileAction);
+	//m_contextMenu->addAction(m_settingsAction);
+	//m_contextMenu->addAction(m_translateAction);
 }
 
 void TranslatorWindow::__connect()
 {
 	connect(m_openFileAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerOpenFile);
-    connect(m_openConfigFileAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerOpenConfigFile);
-    connect(m_saveFileAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerSaveFile);
-	connect(m_aboutAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerAbout);
 	connect(m_translateAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerTranslate);
-	connect(m_exitAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerExit);
+    //connect(m_openConfigFileAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerOpenConfigFile);
+    //connect(m_saveFileAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerSaveFile);
+	//connect(m_aboutAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerAbout);
+	//connect(m_translateAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerTranslate);
+	//connect(m_exitAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerExit);
 	connect(this, &TranslatorWindow::__translateValueChanged, this, &TranslatorWindow::__onTranslateValueChanged);
+	connect(m_listView, &FluListView::itemClicked, this, &TranslatorWindow::__onItemClicked);
+	connect(m_listView, &FluListView::customContextMenuRequested, this, &TranslatorWindow::__onListViewCustomContextMenuRequested);
+	connect(m_settingsAction, &FluAction::triggered, this, &TranslatorWindow::__onTriggerSettings);
+}
+
+void TranslatorWindow::__log(QString text)
+{
+	m_outputWindow->append(text+"\n");
 }
 
 //void TranslatorWindow::__translate()
@@ -298,7 +319,7 @@ void TranslatorWindow::__translate(__Xml& xml)
 			QThread::msleep(1500);
 			message.translation.translation = t;
 			nTranslate += 1;
-			emit __translateValueChanged(nTranslate, nTotalTranslate);
+			emit __translateValueChanged(nTranslate, nTotalTranslate,  s , t);
 		}
 	}
 }
@@ -358,20 +379,13 @@ void TranslatorWindow::__write(QString filepath, __Xml xml)
 	file.close();
 }
 
-void TranslatorWindow::closeEvent(QCloseEvent* event)
+//void TranslatorWindow::contextMenuEvent(QContextMenuEvent *event)
+//{
+//}
+
+void TranslatorWindow::closeEvent(QCloseEvent *event)
 {
-	FluMessageBox messageBox(tr("Close TSFileTranslator?"), tr("choose \"Ok\" to close. choose \"Cancel\" do nothing."), this);
-	int nExec = messageBox.exec();
-	if (nExec == QDialog::Rejected)
-	{
-		event->ignore();
-		return;
-	}
-	else if (nExec == QDialog::Accepted)
-	{
-		// event->accept();
-		QApplication::quit();
-	}
+	FluWindowKitWindow::closeEvent(event);
 }
 
 void TranslatorWindow::__onTriggerOpenFile(bool b)
@@ -397,6 +411,9 @@ void TranslatorWindow::__onTriggerOpenFile(bool b)
 	{
 		return;
 	}
+
+	/// 
+	m_listView->addItem(filepath);
 
 	m_xmlFilePath = filepath;
 	
@@ -454,26 +471,34 @@ void TranslatorWindow::__onTriggerAbout(bool b)
 	info.exec();
 }
 
+void TranslatorWindow::__onTriggerSettings(bool b)
+{
+	SettingsDlg settingsDlg(this);
+	settingsDlg.exec();
+}
+
 void TranslatorWindow::__onTriggerTranslate(bool b)
 {
-	//FluThread thread;
-	//thread.start(nullptr, [=](&thread) {
-	//	}, nullptr);
+	loadConfig();
 	if (m_sourceLang == "" || m_targetLang == "")
 	{
-        FluInfoBarMgr::showInfoBar(window(), FluShortInfoBarType::Warn, "Please set source language and target language.");
+        //FluInfoBarMgr::showInfoBar(window(), FluShortInfoBarType::Warn, "Please set source language and target language.");
+		__log("Please set source language and target language.");
 		return;
 	}
 
 	if (m_translateState == TranslateState::Working)
 	{
-		FluInfoBarMgr::showInfoBar(window(), FluShortInfoBarType::Warn, "Wait for task end.");
+		//FluInfoBarMgr::showInfoBar(window(), FluShortInfoBarType::Warn, "Wait for task end.");
+		__log("Wait for task end.");
 		return;
 	}
 
-	FluMessageBox messageBox(tr("Translate Progress."), tr(""), this);
-	connect(this, &TranslatorWindow::__translateProgress, &messageBox, &FluMessageBox::setInfo);
-	connect(this, &TranslatorWindow::__translateError, &messageBox, &FluMessageBox::setInfo);
+	/// 
+	__log("Translate ...");
+	__log("filepath: " + m_xmlFilePath);
+	__log("sourceLang: " + m_sourceLang);
+	__log("targetLang: " + m_targetLang);
 
 	std::thread __thread([=]() {
 		emit __translateStart();
@@ -486,8 +511,10 @@ void TranslatorWindow::__onTriggerTranslate(bool b)
 		}
 
 		__translate(xml);
-		__write("__write.xml", xml);
-		
+
+		QString writeFile = m_xmlFilePath + "-" + m_targetLang + ".ts";
+		__write(writeFile, xml);
+		__log("writeFile: " + writeFile);
 
 		m_translateState = TranslateState::Ready;
 		emit __translateEnd();
@@ -495,8 +522,6 @@ void TranslatorWindow::__onTriggerTranslate(bool b)
 		});
 
 	__thread.detach();
-	messageBox.exec();
-
 }
 
 void TranslatorWindow::__onTriggerExit(bool b)
@@ -504,9 +529,46 @@ void TranslatorWindow::__onTriggerExit(bool b)
 	close();
 }
 
-void TranslatorWindow::__onTranslateValueChanged(int c, int t)
+void TranslatorWindow::__onTranslateValueChanged(int c, int t, QString source, QString dest)
 {
-	//LOG_DEBUG << c << "/" << t;
-	QString p = QString::asprintf("Translated (%d) of total (%d).", c, t);
-	emit __translateProgress(p);
+	QString p = QString::asprintf("Translated %d/%d: \r\n\t\t %s => %s", c, t, source.toStdString().c_str(), dest.toStdString().c_str());
+	__log(p);
+}
+
+void TranslatorWindow::__onItemClicked(QListWidgetItem *item)
+{
+	// open file;
+	QString filepath = item->text();
+	QFile file(filepath);
+	if (!file.open(QIODevice::ReadOnly))
+	{
+		return;
+	}
+
+	__log(QString::asprintf("Open file: %s\n", filepath.toStdString().c_str()));
+
+	QString str = file.readAll();
+	file.close();
+	m_editor->setText(str);
+}
+
+void TranslatorWindow::__onListViewCustomContextMenuRequested(const QPoint &pos)
+{
+	/// judge clicked item;
+	QListWidgetItem* item = m_listView->itemAt(pos);
+
+	m_contextMenu->clear();
+	if (item == nullptr)
+	{
+		m_contextMenu->addAction(m_openFileAction);
+		m_contextMenu->addAction(m_settingsAction);
+		m_contextMenu->exec(m_listView->mapToGlobal(pos));
+		return;
+	}
+
+	m_contextMenu->addAction(m_openFileAction);
+	m_contextMenu->addAction(m_delteFileAction);
+	m_contextMenu->addAction(m_settingsAction);
+	m_contextMenu->addAction(m_translateAction);
+	m_contextMenu->exec(m_listView->mapToGlobal(pos));
 }

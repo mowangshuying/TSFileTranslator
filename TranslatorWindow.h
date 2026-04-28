@@ -7,9 +7,14 @@
 #include <FluAction.h>
 #include <list>
 #include <QString>
+#include <FluDockManager.h>
+#include "OutputWindow.h"
+#include <FluListView.h>
+#include <QListWidgetItem>
 //#include <FluThread.h>
 //#include <FluDockManager.h>
 //#include <TongYiOpenAi.hpp>
+#include <FluRoundMenu.h>
 
 class Location {
 public:
@@ -86,6 +91,8 @@ public:
 
     void __connect();
 
+    void __log(QString text);
+
     //void __translate();
 
     __Xml __read(QString filepath);
@@ -94,11 +101,12 @@ public:
     void __translate(__Xml& xml);
     void __write(QString filepath, __Xml xml);
 
+    //void contextMenuEvent(QContextMenuEvent* event) override;
     void closeEvent(QCloseEvent* event);
 signals:
     void __translateStart();
     void __translateEnd();
-    void __translateValueChanged(int c, int t);
+    void __translateValueChanged(int c, int t, QString source, QString dest);
     void __translateProgress(QString p);
     void __translateError(QString error);
 public slots:
@@ -106,37 +114,41 @@ public slots:
     void __onTriggerOpenConfigFile(bool b = false);
     void __onTriggerSaveFile(bool b = false);
     void __onTriggerAbout(bool b = false);
+
+    void __onTriggerSettings(bool b = false);
+
     void __onTriggerTranslate(bool b = false);
-
     void __onTriggerExit(bool b = false);
+    void __onTranslateValueChanged(int c, int t, QString source, QString dest);
 
-    void __onTranslateValueChanged(int c, int t);
+    void __onItemClicked(QListWidgetItem* item);
+    // right click item
+    // void __onItemRightClicked(QListWidgetItem* item);
+    void __onListViewCustomContextMenuRequested(const QPoint& pos);
 protected:
-    
-
-    FluMenu* m_fileMenu;
-    FluMenu* m_operMenu;
-    FluMenu* m_helpMenu;
-
+    FluRoundMenu* m_contextMenu;
     FluAction* m_openFileAction;
-    FluAction* m_openConfigFileAction;
-    FluAction* m_saveFileAction;
-    FluAction* m_saveAsFileAction;
-    FluAction* m_exitAction;
-
+    FluAction* m_delteFileAction;
+    FluAction* m_settingsAction;// settings;
     FluAction* m_translateAction;
-
-    FluAction* m_aboutAction;
 
 
     // editor;
 	FluScintilla* m_editor;
+    // outputwindow
+    OutputWindow* m_outputWindow;
+
+    // list view
+    FluListView* m_listView;
 
     // 
     QString m_xmlFilePath;
 
     TranslateState m_translateState;
     QString m_curFilePath;
+
+    ///
+    FluDockManager* m_dockMgr;
 
 
     //// settings;
