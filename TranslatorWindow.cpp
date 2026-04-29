@@ -51,7 +51,9 @@ void TranslatorWindow::loadConfig()
 
 void TranslatorWindow::__initUI()
 {
-	setWindowTitle(tr("TS File Translator"));
+	m_titleLabel->setText(tr("TS File Translator"));
+	//setWindowTitle(tr("TS File Translator"));
+
 
    
    FluDockManager::setConfigFlag(FluDockManager::OpaqueSplitterResize, true);
