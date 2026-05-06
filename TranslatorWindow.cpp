@@ -129,6 +129,11 @@ void TranslatorWindow::__log(QString text)
 	m_outputWindow->append(text+"\n");
 }
 
+void TranslatorWindow::__clearLog()
+{
+	m_outputWindow->clear();
+}
+
 //void TranslatorWindow::__translate()
 //{
 //	__Xml xml = __read(m_xmlFilePath);
@@ -504,6 +509,7 @@ void TranslatorWindow::__onTriggerTranslate(bool b)
 	}
 
 	/// 
+	__clearLog();
 	__log("Translate ...");
 	__log("filepath: " + m_xmlFilePath);
 	__log("sourceLang: " + m_sourceLang);

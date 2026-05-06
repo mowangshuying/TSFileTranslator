@@ -92,6 +92,7 @@ public:
     void __connect();
 
     void __log(QString text);
+    void __clearLog();
 
     //void __translate();
 
