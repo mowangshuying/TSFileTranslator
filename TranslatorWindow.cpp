@@ -545,7 +545,7 @@ void TranslatorWindow::__onItemClicked(QListWidgetItem *item)
 		return;
 	}
 
-	__log(QString::asprintf("Open file: %s\n", filepath.toStdString().c_str()));
+	__log(QString::asprintf("Open file: %s", filepath.toStdString().c_str()));
 
 	QString str = file.readAll();
 	file.close();
