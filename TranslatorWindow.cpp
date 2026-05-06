@@ -127,6 +127,8 @@ void TranslatorWindow::__connect()
 void TranslatorWindow::__log(QString text)
 {
 	m_outputWindow->append(text+"\n");
+	//m_outputWindow->setCursorPosition(m_outputWindow->lines() - 1, 0);
+	//m_outputWindow->ensureCursorVisible();
 }
 
 void TranslatorWindow::__clearLog()
@@ -282,7 +284,7 @@ QString TranslatorWindow::__translate(QString sourceLang, QString targetLang, QS
 
 
 	auto _json = TongYiOpenAi::completion().create(json);
-	//LOG_DEBUG << "_json:" << _json.dump().c_str();
+	LOG_DEBUG << "_json:" << _json.dump().c_str();
 	//return QString(_json["choices"][0]["message"]["content"]);
 
 	// _json is empty
@@ -298,8 +300,46 @@ QString TranslatorWindow::__translate(QString sourceLang, QString targetLang, QS
     }
 
 	std::string content =  _json["choices"][0]["message"]["content"];	
-	QString dest =  QString::fromUtf8(content);
+	QString dest =  QString::fromUtf8(content.c_str());
 	return dest;
+}
+
+std::list<QString> TranslatorWindow::__translate(QString sourceLang, QString targetLang, std::list<QString> sources)
+{
+	//return QStringList();
+	QStringList ss;
+	for (auto & s : sources)
+	{
+		ss.push_back(s);
+	}
+
+	QString source = ss.join("$$@@");
+	QString dest = __translate(sourceLang, targetLang, source);
+	QStringList destList = dest.split("$$@@");
+	std::list<QString> result;
+	for (const auto& d : destList)
+	{
+		result.push_back(d);
+	}
+
+	if (sources.size() != result.size())
+	{
+		/// not equal one by one translate;
+		QThread::msleep(1);
+		result.clear();
+		//QString sourceLang;
+
+		for (auto s : sources)
+		{
+			QString t = __translate(sourceLang, targetLang, s);
+			result.push_back(s);
+			//return result;
+		}
+
+		return result;
+	}
+
+	return result;
 }
 
 void TranslatorWindow::__translate(__Xml& xml)
@@ -317,18 +357,83 @@ void TranslatorWindow::__translate(__Xml& xml)
 		}
 	}
 
+	std::list<QString> sList;
+	std::list<QString> dList;
 	for (auto& context : xml.contexts)
 	{
 		for (auto& message : context.messages)
 		{
-			QString s = message.source;
-			QString t = __translate(m_sourceLang, m_targetLang, s);
-			QThread::msleep(1500);
-			message.translation.translation = t;
-			nTranslate += 1;
-			emit __translateValueChanged(nTranslate, nTotalTranslate,  s , t);
+			sList.push_back(message.source);
 		}
 	}
+
+	std::list<QString> waitList;
+	std::list<QString> wdList;
+	for (auto& s : sList)
+	{
+		waitList.push_back(s);
+		if (waitList.size() >= 20)
+		{
+			std::list<QString> tList = __translate(m_sourceLang, m_targetLang, waitList);
+			for (auto& t : tList)
+			{
+				dList.push_back(t);
+				//emit __translateValueChanged(nTranslate, nTotalTranslate, s, t);
+			}
+
+			///emit
+			{
+				auto iterS = waitList.begin();
+				auto iterT = tList.begin();
+				while (iterS != waitList.end() && iterT != tList.end())
+				{
+					nTranslate += 1;
+					emit __translateValueChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
+					iterS++;
+					iterT++;
+				}
+			}
+
+			waitList.clear();
+		}
+	}
+
+	if (!waitList.empty())
+	{
+		std::list<QString> tList = __translate(m_sourceLang, m_targetLang, waitList);
+		for (auto& t : tList)
+		{
+			dList.push_back(t);
+		}
+
+		///emit
+		{
+			auto iterS = waitList.begin();
+			auto iterT = tList.begin();
+			while (iterS != waitList.end() && iterT != tList.end())
+			{
+				nTranslate += 1;
+				emit __translateValueChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
+				iterS++;
+				iterT++;
+			}
+		}
+
+		waitList.clear();
+	}
+
+	auto iter = dList.begin();
+	for(auto& context : xml.contexts)
+	{
+		for (auto& message : context.messages)
+		{
+			//dList.push_back(message.translation.translation);
+			message.translation.translation = (*iter);
+			iter++;
+		}
+	}
+
+
 }
 
 void TranslatorWindow::__write(QString filepath, __Xml xml)

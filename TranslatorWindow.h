@@ -99,6 +99,7 @@ public:
     __Xml __read(QString filepath);
 
     QString __translate(QString sourceLang, QString targetLang, QString source);
+    std::list<QString> __translate(QString sourceLang, QString targetLang, std::list<QString> sources);
     void __translate(__Xml& xml);
     void __write(QString filepath, __Xml xml);
 
@@ -157,4 +158,7 @@ protected:
     QString m_token;
     QString m_sourceLang;
     QString m_targetLang;
+
+    ///
+    //int m_nTranslateCount;
 };

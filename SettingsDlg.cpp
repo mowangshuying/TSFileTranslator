@@ -90,14 +90,10 @@ void SettingsDlg::__loadSettings()
 	QString token = FluConfigUtils::getUtils()->getSettings()->value("token", "sk-******").toString();
 	QString sourceLang = FluConfigUtils::getUtils()->getSettings()->value("sourceLang", "en").toString();
     QString targetLang = FluConfigUtils::getUtils()->getSettings()->value("targetLang", "zh").toString();
-    //QString saveFile = FluConfigUtils::getUtils()->getSettings()->value("saveFile", "").toString();
 	FluConfigUtils::getUtils()->getSettings()->endGroup();
 
     m_httpurlEdit->setText(httpurl);
     m_tokenEdit->setText(token);
-    //m_sourceLangCombo->getTextBtn()->setText(sourceLang);
-    //m_targetLangCombo->getTextBtn()->setText(targetLang);
-    //m_saveFileEdit->setText(saveFile);
 
     //// data;
     QStringList langs;
@@ -112,6 +108,7 @@ void SettingsDlg::__loadSettings()
     langs << "it"; // 意大利语
     langs << "th"; // 泰语
     langs << "id"; // 越南
+	langs << "tr"; // 土耳其语
 
     for (int i = 0; i < langs.size(); i++)
     {
