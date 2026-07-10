@@ -68,6 +68,15 @@ set(QSS_FILES
     "StyleSheet/light/HomePage.qss"
     "StyleSheet/dark/HomePage.qss"
     "StyleSheet/atomOneDark/HomePage.qss"
+    "StyleSheet/light/SettingsPage.qss"
+    "StyleSheet/dark/SettingsPage.qss"
+    "StyleSheet/atomOneDark/SettingsPage.qss"
+    "StyleSheet/light/TaskViewPage.qss"
+    "StyleSheet/dark/TaskViewPage.qss"
+    "StyleSheet/atomOneDark/TaskViewPage.qss"
+    "StyleSheet/light/LogPage.qss"
+    "StyleSheet/dark/LogPage.qss"
+    "StyleSheet/atomOneDark/LogPage.qss"
 )
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${QSS_FILES})
 

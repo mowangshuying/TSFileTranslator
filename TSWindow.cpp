@@ -7,6 +7,9 @@
 #include <FramelessHelper/Widgets/standardtitlebar.h>
 #include "HomePage.h"
 #include <FluVNavigationIconTextItem.h>
+#include "SettingsPage.h"
+#include "TaskViewPage.h"
+#include "LogPage.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 TSWindow::TSWindow(QWidget *parent/*= nullptr */) : FluFrameLessWidget(parent)
@@ -47,10 +50,43 @@ void TSWindow::__initUI()
     homeNavItem->setKey("HomePage");
     m_navView->addItemToMidLayout(homeNavItem);
     auto homePage = new HomePage(this);
-    m_sLayout->addWidget(homePage);
+    m_sLayout->addWidget("HomePage", homePage);
     connect(homeNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("HomePage");
     });
+
+    /// taskviewpage;
+    auto taskviewNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::TaskView, "TaskView", this);
+    taskviewNavItem->setKey("TaskViewPage");
+    m_navView->addItemToMidLayout(taskviewNavItem);
+    auto taskviewPage = new TaskViewPage(this);
+    m_sLayout->addWidget("TaskViewPage", taskviewPage);
+    connect(taskviewNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+        m_sLayout->setCurrentWidget("TaskViewPage");
+    });
+
+
+    /// logpage;
+    auto logNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Process, "Log", this);
+    logNavItem->setKey("LogPage");
+    m_navView->addItemToMidLayout(logNavItem);
+    auto logPage = new LogPage(this);
+    m_sLayout->addWidget("LogPage", logPage);
+    connect(logNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+        m_sLayout->setCurrentWidget("LogPage");
+    });
+
+
+    /// settingspage;
+    auto settingsNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Settings, "Settings", this);
+    settingsNavItem->setKey("SettingsPage");
+    m_navView->addItemToBottomLayout(settingsNavItem);
+    auto settingsPage = new SettingsPage(this);
+    m_sLayout->addWidget("SettingsPage", settingsPage);
+    connect(settingsNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+        m_sLayout->setCurrentWidget("SettingsPage");
+    });
+
 
 
     m_contentLayout->addWidget(m_navView);

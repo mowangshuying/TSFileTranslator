@@ -1,9 +1,8 @@
 #pragma once
 
-#include "FluVScrollView.h"
+#include <FluWidget.h>  
 
-
-class HomePage : public FluVScrollView 
+class HomePage : public FluWidget 
 {
     Q_OBJECT
 public:
