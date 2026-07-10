@@ -38,8 +38,8 @@ add_subdirectory(3rdparty/FluentUI)
 add_subdirectory(3rdparty/TongYiOpenAi)
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FluentUI/FluControls
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FluentUI/FluUtils
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FluentUI/Controls
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FluentUI/Utils
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/TongYiOpenAi/include/TongYiOpenAi
 )
 
@@ -60,37 +60,30 @@ else()
 endif()
 
 set_property(TARGET ${TGT} PROPERTY WIN32_EXECUTABLE true)
-# set(QSS_FILES
-#     # "StyleSheet/light/StatsWindow.qss"
-#     # "StyleSheet/dark/StatsWindow.qss"
-#     # "StyleSheet/atomOneDark/StatsWindow.qss"
-#     # "StyleSheet/light/InfoCard.qss"
-#     # "StyleSheet/dark/InfoCard.qss"
-#     # "StyleSheet/atomOneDark/InfoCard.qss"
-# )
-# source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${QSS_FILES})
 
-# qt_add_resources(${TGT} "Qss"
-#     PREFIX "/"
-#     BASE "."
-#     FILES
-#     ${QSS_FILES}
-# )
+set(QSS_FILES
+    "StyleSheet/light/TSWindow.qss"
+    "StyleSheet/dark/TSWindow.qss"
+    "StyleSheet/atomOneDark/TSWindow.qss"
+    "StyleSheet/light/HomePage.qss"
+    "StyleSheet/dark/HomePage.qss"
+    "StyleSheet/atomOneDark/HomePage.qss"
+)
+source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${QSS_FILES})
 
-# add_executable(GithubReleaseStatus App.cpp)
-# target_link_libraries(${TGT}
-#     PRIVATE 
-#     FluControls
-#     FluUtils
-#     Qt${QT_VERSION_MAJOR}::Network
-#     qtadvanceddocking-qt6
-#     )
+qt_add_resources(${TGT} "Qss"
+    PREFIX "/"
+    BASE "."
+    FILES
+    ${QSS_FILES}
+)
+
 
 if(QT_VERSION VERSION_GREATER_EQUAL "6.2")
 target_link_libraries(${TGT}
     PRIVATE
-    FluControls
-    FluUtils
+    FluentUI::Controls
+    FluentUI::Utils
     qscintilla
     qrcode
     Qt6::Charts
@@ -104,8 +97,8 @@ target_link_libraries(${TGT}
 else()
 target_link_libraries(${TGT}
     PRIVATE
-    FluControls
-    FluUtils
+    FluentUI::Controls
+    FluentUI::Utils
     qscintilla
     qrcode
     Qt5::Charts

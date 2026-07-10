@@ -51,6 +51,7 @@ void TranslatorWindow::loadConfig()
 
 void TranslatorWindow::__initUI()
 {
+	setWindowIcon(QIcon("./App.png"));
 	m_titleLabel->setText(tr("TS File Translator"));
 	//setWindowTitle(tr("TS File Translator"));
 

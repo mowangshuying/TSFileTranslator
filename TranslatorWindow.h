@@ -11,67 +11,8 @@
 #include "OutputWindow.h"
 #include <FluListView.h>
 #include <QListWidgetItem>
-//#include <FluThread.h>
-//#include <FluDockManager.h>
-//#include <TongYiOpenAi.hpp>
 #include <FluRoundMenu.h>
-
-class Location {
-public:
-    void clear()
-    {
-        filename.clear();
-        line.clear();
-    }
-public:
-    QString filename;
-    QString line;
-};
-
-class Translation
-{
-public:
-    void clear()
-    {
-        type = "";
-        translation = "";
-    }
-public:
-    QString type;
-    QString translation;
-};
-
-class Message {
-public:
-    void clear()
-    {
-        locations.clear();
-        source = "";
-        translation.clear();
-    }
-public:
-    std::list<Location> locations;
-    QString source;
-    Translation translation;
-};
-
-class Context {
-public:
-    void clear()
-    {
-        name = "";
-        messages.clear();
-    }
-public:
-    QString name;
-    std::list<Message> messages;
-};
-
-class __Xml {
-public:
-    QString version;
-    std::list<Context> contexts;
-};
+#include "___Xml.h"
 
 enum class TranslateState {
     Ready,
@@ -103,7 +44,6 @@ public:
     void __translate(__Xml& xml);
     void __write(QString filepath, __Xml xml);
 
-    //void contextMenuEvent(QContextMenuEvent* event) override;
     void closeEvent(QCloseEvent* event);
 signals:
     void __translateStart();
@@ -158,7 +98,4 @@ protected:
     QString m_token;
     QString m_sourceLang;
     QString m_targetLang;
-
-    ///
-    //int m_nTranslateCount;
 };
