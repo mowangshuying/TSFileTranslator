@@ -9,5 +9,7 @@ class TaskCard  : public FluWidget
 public:
 	TaskCard(QWidget *parent = nullptr);
 	~TaskCard();
+
+	void onThemeChanged();
 };
 

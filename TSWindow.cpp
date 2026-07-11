@@ -95,10 +95,24 @@ void TSWindow::__initUI()
     
     // m_navView->collapseView();
     m_navView->onMenuItemClicked();
+
+    __log("TSWindow 窗口初始化完成!");
     onThemeChanged();
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, &TSWindow::onThemeChanged);
 }
 
+LogPage *TSWindow::getLogPage()
+{
+    // return nullptr;
+    return qobject_cast<LogPage *>(m_sLayout->getWidget("LogPage"));
+}
+
+void TSWindow::__log(QString text)
+{
+    if (getLogPage() == nullptr)
+        return;
+    getLogPage()->appendLog(text);
+}
 
 void TSWindow::onThemeChanged()
 {

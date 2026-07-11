@@ -77,6 +77,9 @@ set(QSS_FILES
     "StyleSheet/light/LogPage.qss"
     "StyleSheet/dark/LogPage.qss"
     "StyleSheet/atomOneDark/LogPage.qss"
+    "StyleSheet/light/TaskCard.qss"
+    "StyleSheet/dark/TaskCard.qss"
+    "StyleSheet/atomOneDark/TaskCard.qss"
 )
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${QSS_FILES})
 

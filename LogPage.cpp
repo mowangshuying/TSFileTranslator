@@ -25,8 +25,8 @@ LogPage::LogPage(QWidget *parent) : FluWidget(parent)
 void LogPage::appendLog(QString text)
 {
     // timestamp level text
-    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    text = QString("[%1] %2").arg(timestamp, text);
+    QString timestamp = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
+    text = QString("%1 - %2").arg(timestamp, text);
     m_logWindow->append(text);
 }
 
