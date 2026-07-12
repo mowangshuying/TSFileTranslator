@@ -80,6 +80,9 @@ set(QSS_FILES
     "StyleSheet/light/TaskCard.qss"
     "StyleSheet/dark/TaskCard.qss"
     "StyleSheet/atomOneDark/TaskCard.qss"
+    "StyleSheet/light/TaskButton.qss"
+    "StyleSheet/dark/TaskButton.qss"
+    "StyleSheet/atomOneDark/TaskButton.qss"
 )
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${QSS_FILES})
 

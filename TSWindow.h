@@ -1,5 +1,5 @@
 #pragma once
-
+#include "___def.h"
 #include <FluFrameLessWidget.h>
 #include <FluVNavigationView.h>
 #include <FluStackedLayout.h>
@@ -18,6 +18,7 @@ public:
     void __log(QString text);
 
 // public slots:
+    void onClickedAddToTaskListButton(TaskData taskData);
     void onThemeChanged();
 protected:
     FluVNavigationView* m_navView;

@@ -138,10 +138,20 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
     /// addToTask;
     auto hAddToTaskLayout = new QHBoxLayout;
     vWrapWidgetLayout->addLayout(hAddToTaskLayout);
-    auto addToTaskButton = new FluStyleButton;
-    addToTaskButton->setFixedSize(240, 30);
-    addToTaskButton->setText("添加至任务列表");
-    hAddToTaskLayout->addWidget(addToTaskButton);
+    auto addToTaskListButton = new FluStyleButton;
+    addToTaskListButton->setFixedSize(240, 30);
+    addToTaskListButton->setText("添加至任务列表");
+    hAddToTaskLayout->addWidget(addToTaskListButton);
+
+    connect(addToTaskListButton, &FluStyleButton::clicked, this, [=](){
+        TaskData data;
+        data.HtttpUrl = httpUrlLineEdit->text();
+        data.Tooken = tokenLineEdit->text();
+        data.SourceFile = sourceFileLineEidt->text();
+        data.SourceLang = sourceLangComboBox->getTextBtn()->text();
+        data.TargetLang = targetLangComboBox->getTextBtn()->text();
+        emit clicekdAddToTaskListButton(data);
+    });
 
     onThemeChanged();
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme){

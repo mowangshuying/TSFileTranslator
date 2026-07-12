@@ -114,6 +114,11 @@ void TSWindow::__log(QString text)
     getLogPage()->appendLog(text);
 }
 
+void TSWindow::onClickedAddToTaskListButton(TaskData taskData)
+{
+
+}
+
 void TSWindow::onThemeChanged()
 {
     if (FluThemeUtils::isLightTheme())
