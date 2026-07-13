@@ -5,6 +5,7 @@
 #include <FluSettingsVersionBox.h>
 #include <FluHyperLinkButton.h>
 
+SettingsPage* SettingsPage::__page = nullptr;
 SettingsPage::SettingsPage(QWidget *parent) : FluWidget(parent)
 {
     auto vMainLayout = new QVBoxLayout(this);
@@ -77,6 +78,13 @@ SettingsPage::SettingsPage(QWidget *parent) : FluWidget(parent)
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme){
         onThemeChanged();
     });
+}
+
+SettingsPage* SettingsPage::getPage()
+{
+    if (__page == nullptr)
+        __page = new SettingsPage();
+    return __page;
 }
 
 void SettingsPage::onThemeChanged()

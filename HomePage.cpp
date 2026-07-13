@@ -10,6 +10,7 @@
 #include <FluStyleButton.h>
 #include <QFileDialog>
 
+HomePage* HomePage::__page = nullptr;
 HomePage::HomePage(QWidget *parent) : FluWidget(parent)
 {
 
@@ -185,6 +186,14 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme){
         onThemeChanged();
     });
+}
+
+HomePage* HomePage::getPage()
+{
+    //return nullptr;
+    if (__page == nullptr)
+        __page = new HomePage();
+    return __page;
 }
 
 

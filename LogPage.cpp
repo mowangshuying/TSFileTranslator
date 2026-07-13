@@ -2,6 +2,7 @@
 #include <FluUtils.h>
 #include <FluLabel.h>
 
+LogPage* LogPage::__page = nullptr;
 LogPage::LogPage(QWidget *parent) : FluWidget(parent)
 {
     auto vMainLayout = new QVBoxLayout(this);
@@ -20,6 +21,14 @@ LogPage::LogPage(QWidget *parent) : FluWidget(parent)
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme){
         onThemeChanged();
     });
+}
+
+LogPage* LogPage::getPage()
+{
+    //return nullptr;
+    if (__page == nullptr)
+        __page = new LogPage();
+    return __page;
 }
 
 void LogPage::appendLog(QString text)

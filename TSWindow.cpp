@@ -50,7 +50,7 @@ void TSWindow::__initUI()
     m_homeNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Home, "Home", this);
     m_homeNavItem->setKey("HomePage");
     m_navView->addItemToMidLayout(m_homeNavItem);
-    m_homePage = new HomePage(this);
+    m_homePage = HomePage::getPage();
     m_sLayout->addWidget("HomePage", m_homePage);
     connect(m_homeNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("HomePage");
@@ -61,7 +61,7 @@ void TSWindow::__initUI()
     m_taskViewNavItem->setKey("TaskViewPage");
     m_navView->addItemToMidLayout(m_taskViewNavItem);
     
-    m_taskViewPage = new TaskViewPage(this);
+    m_taskViewPage = TaskViewPage::getPage();
     m_sLayout->addWidget("TaskViewPage", m_taskViewPage);
     connect(m_taskViewNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("TaskViewPage");
@@ -73,7 +73,7 @@ void TSWindow::__initUI()
     m_logNavItem->setKey("LogPage");
     m_navView->addItemToMidLayout(m_logNavItem);
     
-    m_logPage = new LogPage(this);
+    m_logPage = LogPage::getPage();
     m_sLayout->addWidget("LogPage", m_logPage);
     connect(m_logNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("LogPage");
@@ -85,7 +85,7 @@ void TSWindow::__initUI()
     m_settingsNavItem->setKey("SettingsPage");
     m_navView->addItemToBottomLayout(m_settingsNavItem);
     
-    m_settingsPage = new SettingsPage(this);
+    m_settingsPage = SettingsPage::getPage();
     m_sLayout->addWidget("SettingsPage", m_settingsPage);
     connect(m_settingsNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("SettingsPage");

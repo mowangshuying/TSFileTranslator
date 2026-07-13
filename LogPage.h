@@ -6,13 +6,16 @@
 class LogPage : public FluWidget 
 {
     Q_OBJECT
-public:
+private:
     LogPage(QWidget* parent = nullptr);
-    
+public:
+    static LogPage* getPage();
+
     void appendLog(QString text);
 
     void onThemeChanged();
 
 protected:
     FluScintilla* m_logWindow;
+    static LogPage* __page;
 };

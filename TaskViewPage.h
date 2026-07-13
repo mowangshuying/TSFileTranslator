@@ -5,17 +5,17 @@
 class TaskViewPage : public FluVScrollView 
 {
     Q_OBJECT
-public:
+private:
     TaskViewPage(QWidget* parent = nullptr);
    
-    int getTaskId()
-    {
-        static int taskId = 1;
-        return taskId++;
-    }
+public:
+    static TaskViewPage* getPage();
+
+    int getTaskId();
 
     void addTaskCard(TaskData taskData);
 
     void onThemeChanged();
 protected:
+    static TaskViewPage* __page;
 };

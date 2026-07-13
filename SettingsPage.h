@@ -5,8 +5,12 @@
 class SettingsPage : public FluWidget 
 {
     Q_OBJECT
-public:
+private:
     SettingsPage(QWidget* parent = nullptr);
-    
+public:
+    static SettingsPage* getPage();
+
     void onThemeChanged();
+protected:
+    static SettingsPage* __page;
 };

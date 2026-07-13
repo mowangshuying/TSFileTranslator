@@ -3,6 +3,7 @@
 #include "TaskCard.h"
 #include <FluLabel.h>
 
+TaskViewPage* TaskViewPage::__page = nullptr;
 TaskViewPage::TaskViewPage(QWidget *parent) : FluVScrollView(parent)
 {
 
@@ -22,6 +23,19 @@ TaskViewPage::TaskViewPage(QWidget *parent) : FluVScrollView(parent)
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme) {
         onThemeChanged();    
     });
+}
+
+TaskViewPage* TaskViewPage::getPage()
+{
+    if (__page == nullptr)
+        __page = new TaskViewPage();
+    return __page;
+}
+
+int TaskViewPage::getTaskId()
+{
+    static int taskId = 1;
+    return taskId++;
 }
 
 void TaskViewPage::addTaskCard(TaskData taskData)

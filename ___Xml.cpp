@@ -202,6 +202,17 @@ QString __Xml::__translate(QString sourceLang, QString targetLang, QString sourc
 	translationOptions["source_lang"] = sourceLang.toStdString();
 	translationOptions["target_lang"] = targetLang.toStdString();
 
+	/// Terms;
+	//translationOptions["terms"] = Json::array();
+	//{
+	//	Json term;
+	//	term["source"] = "AppBarButton";
+	//	term["target"] = std::string("”¶”√¿∏∞¥≈•");
+	//	translationOptions["terms"].push_back(term);
+	//}
+
+
+
 	json["translation_options"] = translationOptions;
 
 	//json["messages"] = { { {"role", "user"}, {"content", sourceLang} } };
@@ -303,8 +314,8 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 			for (auto& t : tList)
 			{
 				dList.push_back(t);
-				QThread::msleep(20);
-				emit __translateInfoChanged(nTranslate, nTotalTranslate, s, t);
+				//QThread::msleep(20);
+				//emit __translateInfoChanged(nTranslate, nTotalTranslate, s, t);
 			}
 
 			///emit
@@ -314,7 +325,7 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 				while (iterS != waitList.end() && iterT != tList.end())
 				{
 					nTranslate += 1;
-					QThread::msleep(20);
+					QThread::msleep(40);
 					emit __translateInfoChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
 					iterS++;
 					iterT++;
@@ -340,7 +351,7 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 			while (iterS != waitList.end() && iterT != tList.end())
 			{
 				nTranslate += 1;
-				QThread::msleep(20);
+				QThread::msleep(40);
 				emit __translateInfoChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
 				iterS++;
 				iterT++;
