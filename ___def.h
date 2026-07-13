@@ -17,7 +17,7 @@ enum class TaskButtonType {
 class TaskData {
 public:
     QString HtttpUrl;
-    QString Tooken;
+    QString Token;
     QString SourceFile;
     QString SourceLang;
     QString TargetLang;

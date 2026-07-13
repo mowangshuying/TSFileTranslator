@@ -8,6 +8,7 @@
 #include <FluComboBoxEx.h>
 #include <FluIconButton.h>
 #include <FluStyleButton.h>
+#include <QFileDialog>
 
 HomePage::HomePage(QWidget *parent) : FluWidget(parent)
 {
@@ -143,14 +144,41 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
     addToTaskListButton->setText("添加至任务列表");
     hAddToTaskLayout->addWidget(addToTaskListButton);
 
+    connect(loadSourceFileButton, &FluIconButton::clicked, this, [=]() {
+        QFileDialog qfd(this);
+        qfd.setFileMode(QFileDialog::ExistingFile);
+        int nExec = qfd.exec();
+        if (nExec != QDialog::Accepted)
+        {
+            qfd.close();
+            return;
+        }
+
+        QStringList sFiles = qfd.selectedFiles();
+        if (sFiles.isEmpty())
+        {
+            return;
+        }
+
+        QString filepath = sFiles[0];
+        QFile file(filepath);
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            return;
+        }
+
+        sourceFileLineEidt->setText(filepath);
+
+        });
+
     connect(addToTaskListButton, &FluStyleButton::clicked, this, [=](){
         TaskData data;
         data.HtttpUrl = httpUrlLineEdit->text();
-        data.Tooken = tokenLineEdit->text();
+        data.Token = tokenLineEdit->text();
         data.SourceFile = sourceFileLineEidt->text();
         data.SourceLang = sourceLangComboBox->getTextBtn()->text();
         data.TargetLang = targetLangComboBox->getTextBtn()->text();
-        emit clicekdAddToTaskListButton(data);
+        emit clickedAddToTaskListButton(data);
     });
 
     onThemeChanged();

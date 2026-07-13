@@ -18,7 +18,7 @@ public:
     HomePage(QWidget* parent = nullptr);
 
 signals:
-    void clicekdAddToTaskListButton(TaskData taskData);
+    void clickedAddToTaskListButton(TaskData taskData);
 public slots:
     void onThemeChanged();
 };

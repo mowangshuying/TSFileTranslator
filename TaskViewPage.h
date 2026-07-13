@@ -1,5 +1,5 @@
 #pragma once
-
+#include "___def.h"
 #include <FluVScrollView.h>
 
 class TaskViewPage : public FluVScrollView 
@@ -8,5 +8,8 @@ class TaskViewPage : public FluVScrollView
 public:
     TaskViewPage(QWidget* parent = nullptr);
     
+    void addTaskCard(TaskData taskData);
+
     void onThemeChanged();
+protected:
 };

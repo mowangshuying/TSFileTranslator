@@ -46,44 +46,47 @@ void TSWindow::__initUI()
 
 
     /// homepage;
-    auto homeNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Home, "Home", this);
-    homeNavItem->setKey("HomePage");
-    m_navView->addItemToMidLayout(homeNavItem);
-    auto homePage = new HomePage(this);
-    m_sLayout->addWidget("HomePage", homePage);
-    connect(homeNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+    m_homeNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Home, "Home", this);
+    m_homeNavItem->setKey("HomePage");
+    m_navView->addItemToMidLayout(m_homeNavItem);
+    m_homePage = new HomePage(this);
+    m_sLayout->addWidget("HomePage", m_homePage);
+    connect(m_homeNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("HomePage");
     });
 
     /// taskviewpage;
-    auto taskviewNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::TaskView, "TaskView", this);
-    taskviewNavItem->setKey("TaskViewPage");
-    m_navView->addItemToMidLayout(taskviewNavItem);
-    auto taskviewPage = new TaskViewPage(this);
-    m_sLayout->addWidget("TaskViewPage", taskviewPage);
-    connect(taskviewNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+    m_taskViewNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::TaskView, "TaskView", this);
+    m_taskViewNavItem->setKey("TaskViewPage");
+    m_navView->addItemToMidLayout(m_taskViewNavItem);
+    
+    m_taskViewPage = new TaskViewPage(this);
+    m_sLayout->addWidget("TaskViewPage", m_taskViewPage);
+    connect(m_taskViewNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("TaskViewPage");
     });
 
 
     /// logpage;
-    auto logNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Process, "Log", this);
-    logNavItem->setKey("LogPage");
-    m_navView->addItemToMidLayout(logNavItem);
-    auto logPage = new LogPage(this);
-    m_sLayout->addWidget("LogPage", logPage);
-    connect(logNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+    m_logNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Process, "Log", this);
+    m_logNavItem->setKey("LogPage");
+    m_navView->addItemToMidLayout(m_logNavItem);
+    
+    m_logPage = new LogPage(this);
+    m_sLayout->addWidget("LogPage", m_logPage);
+    connect(m_logNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("LogPage");
     });
 
 
     /// settingspage;
-    auto settingsNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Settings, "Settings", this);
-    settingsNavItem->setKey("SettingsPage");
-    m_navView->addItemToBottomLayout(settingsNavItem);
-    auto settingsPage = new SettingsPage(this);
-    m_sLayout->addWidget("SettingsPage", settingsPage);
-    connect(settingsNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
+    m_settingsNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Settings, "Settings", this);
+    m_settingsNavItem->setKey("SettingsPage");
+    m_navView->addItemToBottomLayout(m_settingsNavItem);
+    
+    m_settingsPage = new SettingsPage(this);
+    m_sLayout->addWidget("SettingsPage", m_settingsPage);
+    connect(m_settingsNavItem, &FluVNavigationIconTextItem::itemClicked, this, [=](){
         m_sLayout->setCurrentWidget("SettingsPage");
     });
 
@@ -97,6 +100,8 @@ void TSWindow::__initUI()
     m_navView->onMenuItemClicked();
 
     __log("TSWindow 窗口初始化完成!");
+
+    connect(m_homePage, &HomePage::clickedAddToTaskListButton, this, &TSWindow::onClickedAddToTaskListButton);
     onThemeChanged();
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, &TSWindow::onThemeChanged);
 }
@@ -116,7 +121,8 @@ void TSWindow::__log(QString text)
 
 void TSWindow::onClickedAddToTaskListButton(TaskData taskData)
 {
-
+    emit m_taskViewNavItem->itemClicked();
+    m_taskViewPage->addTaskCard(taskData);
 }
 
 void TSWindow::onThemeChanged()

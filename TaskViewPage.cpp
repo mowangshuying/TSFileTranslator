@@ -14,14 +14,21 @@ TaskViewPage::TaskViewPage(QWidget *parent) : FluVScrollView(parent)
     titleLabel->setLabelStyle(FluLabelStyle::TitleTextBlockStyle);
     getMainLayout()->addWidget(titleLabel, 0, Qt::AlignTop);
 
-    auto taskCard = new TaskCard();
+    //auto taskCard = new TaskCard();
     // vMainLayout->addWidget(taskCard);
-    getMainLayout()->addWidget(taskCard, 0, Qt::AlignTop);
+    //getMainLayout()->addWidget(taskCard, 0, Qt::AlignTop);
 
     onThemeChanged();
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme) {
         onThemeChanged();    
     });
+}
+
+void TaskViewPage::addTaskCard(TaskData taskData)
+{
+    auto taskCard = new TaskCard();
+    taskCard->setTaskData(taskData);
+    getMainLayout()->addWidget(taskCard, 0, Qt::AlignTop);
 }
 
 void TaskViewPage::onThemeChanged()
