@@ -13,6 +13,11 @@ public:
 	TaskCard(QWidget *parent = nullptr);
 	~TaskCard();
 
+    void setTaskId(int taskId)
+    {
+        m_taskId = taskId;
+    }
+
     void setTaskData(TaskData taskData);
 
     void onClickedStartButton();
@@ -45,5 +50,6 @@ protected:
 
     __Xml m_xml; 
     TaskData m_taskData;
+    int m_taskId;
 };
 

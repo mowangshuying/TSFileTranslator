@@ -10,6 +10,7 @@
 #include "SettingsPage.h"
 #include "TaskViewPage.h"
 #include "LogPage.h"
+#include <FluMessageBox.h>
 
 FRAMELESSHELPER_USE_NAMESPACE
 TSWindow::TSWindow(QWidget *parent/*= nullptr */) : FluFrameLessWidget(parent)
@@ -155,4 +156,20 @@ void TSWindow::onThemeChanged()
     }
 
     FluStyleSheetUitls::setQssByFileName("TSWindow.qss", this, FluThemeUtils::getUtils()->getTheme());
+}
+
+void TSWindow::closeEvent(QCloseEvent* event)
+{
+    FluMessageBox messageBox("TS文件转换器(Qt)", "是否关闭窗口", this);
+    int nExec = messageBox.exec();
+    if (nExec == QDialog::Rejected)
+    {
+        event->ignore();
+        return;
+    }
+    else if (nExec == QDialog::Accepted)
+    {
+        // event->accept();
+        QApplication::quit();
+    }
 }

@@ -70,7 +70,9 @@ public:
     std::list<QString> __translate(QString sourceLang, QString targetLang, std::list<QString> sources);
     void __translate(QString sourceLang, QString targetLang);
 signals:
+    void __translateStarted();
     void __translateInfoChanged(int nTranslate, int nTotalTranslate, QString s, QString t);
+    void __translateEnded();
 public:
     QString __version;
     std::list<Context> __contexts;

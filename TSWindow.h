@@ -25,6 +25,8 @@ public:
 // public slots:
     void onClickedAddToTaskListButton(TaskData taskData);
     void onThemeChanged();
+
+    void closeEvent(QCloseEvent* event);
 protected:
     FluVNavigationView* m_navView;
     FluStackedLayout* m_sLayout;

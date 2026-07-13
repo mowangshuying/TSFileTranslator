@@ -291,6 +291,7 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 		}
 	}
 
+	emit __translateStarted();
 	std::list<QString> waitList;
 	std::list<QString> wdList;
 	for (auto& s : sList)
@@ -358,4 +359,6 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 			iter++;
 		}
 	}
+
+	emit __translateEnded();
 }

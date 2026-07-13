@@ -110,9 +110,7 @@ void TaskCard::onClickedStartButton()
         {
             //// 开始执行翻译工作;
             m_xml.__init(m_taskData.HtttpUrl, m_taskData.Token);
-
             connect(&m_xml, &__Xml::__translateInfoChanged, this, [=](int nTranslate, int nTotalTranslate, QString s, QString t) {
-
                 QFontMetrics metrics(font()); 
                 if (metrics.horizontalAdvance(s) > 100) {
                     s = metrics.elidedText(s, Qt::ElideRight, 100);
@@ -122,7 +120,7 @@ void TaskCard::onClickedStartButton()
                     t = metrics.elidedText(t, Qt::ElideRight, 100);
                 }
 
-                QString translateInfo = QString("翻译进度: %1/%2: %3 => %4").arg(nTranslate).arg(nTotalTranslate).arg(s).arg(t);
+                QString translateInfo = QString("翻译: %1/%2  %3 => %4").arg(nTranslate).arg(nTotalTranslate).arg(s).arg(t);
                 m_translatingLabel->setText(translateInfo);
                 });
 
