@@ -113,8 +113,9 @@ void TaskCard::onClickedStartButton()
             m_xml.__init(m_taskData.HtttpUrl, m_taskData.Token);
             connect(&m_xml, &__Xml::__translateInfoChanged, this, [=](int nTranslate, int nTotalTranslate, QString s, QString t) {
                 
+                bool isError = s == t;
                 QString sLog = QString::asprintf("Translated %d/%d:\r\n\t\t %s => \r\n\t\t%s \n", nTranslate, nTotalTranslate, s.toStdString().c_str(), t.toStdString().c_str());
-                LogPage::getPage()->appendLog(sLog);
+                LogPage::getPage()->appendLog(sLog, isError);
                 
                 
                 QFontMetrics metrics(font()); 

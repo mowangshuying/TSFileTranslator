@@ -3,6 +3,13 @@
 
 #include "___Xml.h"
 
+enum class LogLevel {
+    Trace = 0,
+    Info = 1,    // 普通信息 (黑色)
+    Warring = 2, // 警告 (橙色)
+    Error = 3    // 错误 (红色)
+};
+
 // 开始
 // 停止
 // 继续

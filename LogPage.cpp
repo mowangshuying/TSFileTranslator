@@ -1,6 +1,7 @@
 #include "LogPage.h"
 #include <FluUtils.h>
 #include <FluLabel.h>
+#include <FluTextEdit.h>
 
 LogPage* LogPage::__page = nullptr;
 LogPage::LogPage(QWidget *parent) : FluWidget(parent)
@@ -10,11 +11,7 @@ LogPage::LogPage(QWidget *parent) : FluWidget(parent)
     setLayout(vMainLayout);
     vMainLayout->setContentsMargins(35, 35, 35, 35);
 
-    m_logWindow = new FluScintilla;
-    m_logWindow->setMarginLineNumbers(0, false);
-    m_logWindow->setMarginWidth(0, 0);
-    m_logWindow->setReadOnly(true);
-
+    m_logWindow = new FluTextEdit;
     vMainLayout->addWidget(m_logWindow, 1);
 
     onThemeChanged();
@@ -31,11 +28,17 @@ LogPage* LogPage::getPage()
     return __page;
 }
 
-void LogPage::appendLog(QString text)
+void LogPage::appendLog(QString text, bool isError)
 {
     // timestamp level text
     QString timestamp = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
     text = QString("%1 - %2").arg(timestamp, text);
+
+    if (isError)
+    {
+        text = QString("<font color=\"red\">%1</font>").arg(text);
+    }
+
     m_logWindow->append(text);
 }
 

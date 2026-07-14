@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FluWidget.h>
-#include <FluScintilla.h>
+#include <FluTextEdit.h>
 
 class LogPage : public FluWidget 
 {
@@ -11,11 +11,11 @@ private:
 public:
     static LogPage* getPage();
 
-    void appendLog(QString text);
+    void appendLog(QString text, bool isError = false);
 
     void onThemeChanged();
 
 protected:
-    FluScintilla* m_logWindow;
+    FluTextEdit* m_logWindow;
     static LogPage* __page;
 };
