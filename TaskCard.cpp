@@ -114,7 +114,7 @@ void TaskCard::onClickedStartButton()
             connect(&m_xml, &__Xml::__translateInfoChanged, this, [=](int nTranslate, int nTotalTranslate, QString s, QString t) {
                 
                 bool isError = s == t;
-                QString sLog = QString::asprintf("Translated %d/%d:\r\n\t\t %s => \r\n\t\t%s \n", nTranslate, nTotalTranslate, s.toStdString().c_str(), t.toStdString().c_str());
+                QString sLog = QString::asprintf("翻译: %d/%d:\r\n\t\t %s => \r\n\t\t%s\n", nTranslate, nTotalTranslate, s.toStdString().c_str(), t.toStdString().c_str());
                 LogPage::getPage()->appendLog(sLog, isError);
                 
                 

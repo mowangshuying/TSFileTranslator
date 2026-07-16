@@ -257,17 +257,35 @@ std::list<QString> __Xml::__translate(QString sourceLang, QString targetLang, st
 		result.push_back(d);
 	}
 
-	if (sources.size() != result.size())
+	bool isNeedReTranslate = false;
+	if (destList.size() != sources.size())
+        isNeedReTranslate = true;
+	if (destList.size() == sources.size())
+	{
+		for (auto iterSource = sources.begin(), iterDest = result.begin(); iterSource != sources.end(); iterSource++, iterDest++)
+		{
+			QString source = *iterSource;
+			QString dest = *iterDest;
+			if (source == dest)
+			{
+				isNeedReTranslate = true;
+				break;
+			}
+		}
+	}
+
+
+	if (isNeedReTranslate)
 	{
 		/// not equal one by one translate;
-		QThread::msleep(1);
+		/*QThread::msleep(1500);*/
 		result.clear();
-		//QString sourceLang;
 
 		for (auto s : sources)
 		{
 			QString t = __translate(sourceLang, targetLang, s);
-			result.push_back(s);
+			QThread::msleep(1500);
+			result.push_back(t);
 			//return result;
 		}
 
@@ -333,6 +351,8 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 			}
 
 			waitList.clear();
+
+            QThread::msleep(2000);
 		}
 	}
 
