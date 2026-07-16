@@ -40,13 +40,15 @@ void TSWindow::__initUI()
 
 
     m_navView = new FluVNavigationView(this);
-    // m_navView->collapseView();
+    m_contentLayout->addWidget(m_navView);
+    m_sLayout = new FluStackedLayout;
+    m_contentLayout->addLayout(m_sLayout);
+
     m_navView->hideMenuItem();
     m_navView->hideSearchItem();
-    m_sLayout = new FluStackedLayout;
 
 
-    /// homepage;
+    // /// homepage;
     m_homeNavItem  = new FluVNavigationIconTextItem(FluAwesomeType::Home, "Home", this);
     m_homeNavItem->setKey("HomePage");
     m_navView->addItemToMidLayout(m_homeNavItem);
@@ -93,11 +95,11 @@ void TSWindow::__initUI()
 
 
 
-    m_contentLayout->addWidget(m_navView);
-    m_contentLayout->addLayout(m_sLayout);
+    // m_contentLayout->addWidget(m_navView);
+    // m_contentLayout->addLayout(m_sLayout);
     
     
-    // m_navView->collapseView();
+    // // m_navView->collapseView();
     m_navView->onMenuItemClicked();
 
     __log("TSWindow 窗口初始化完成!");

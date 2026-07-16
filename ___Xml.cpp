@@ -1,4 +1,4 @@
-#include "___Xml.h"
+Ôªø#include "___Xml.h"
 #include <TongYiOpenAi.hpp>
 #include <QThread>
 
@@ -141,7 +141,7 @@ void __Xml::__write(QString filepath)
 	writer.setAutoFormatting(true);
 	writer.writeStartDocument();
 
-	/// –¥»Îts;
+	/// ÂÜôÂÖ•ts;
 	writer.writeStartElement("TS");
 	writer.writeAttribute("version", __version);
 
@@ -179,7 +179,7 @@ void __Xml::__write(QString filepath)
 		writer.writeEndElement();
 	}
 
-	writer.writeEndElement();// Ω· ¯ts;
+	writer.writeEndElement();// ÁªìÊùüts;
 
 	file.close();
 }
@@ -207,7 +207,7 @@ QString __Xml::__translate(QString sourceLang, QString targetLang, QString sourc
 	//{
 	//	Json term;
 	//	term["source"] = "AppBarButton";
-	//	term["target"] = std::string("”¶”√¿∏∞¥≈•");
+	//	term["target"] = std::string("Â∫îÁî®Ê†èÊåâÈíÆ");
 	//	translationOptions["terms"].push_back(term);
 	//}
 
@@ -277,19 +277,27 @@ std::list<QString> __Xml::__translate(QString sourceLang, QString targetLang, st
 
 	if (isNeedReTranslate)
 	{
-		/// not equal one by one translate;
-		/*QThread::msleep(1500);*/
 		result.clear();
-
 		for (auto s : sources)
 		{
 			QString t = __translate(sourceLang, targetLang, s);
+
+			m_nTranslate++;
+			emit __translateInfoChanged(m_nTranslate, m_nTotalTranslate, s, t);
+
 			QThread::msleep(1500);
 			result.push_back(t);
-			//return result;
 		}
 
 		return result;
+	}
+
+	for (auto iterSource = sources.begin(), iterDest = result.begin(); iterSource != sources.end(); iterSource++, iterDest++)
+	{
+		m_nTranslate++;
+		QString s = *iterSource;
+		QString t = *iterDest;
+		emit __translateInfoChanged(m_nTranslate, m_nTotalTranslate, s, t);
 	}
 
 	return result;
@@ -297,8 +305,8 @@ std::list<QString> __Xml::__translate(QString sourceLang, QString targetLang, st
 
 void __Xml::__translate(QString sourceLang, QString targetLang)
 {
-	int nTotalTranslate = 0;
-	int nTranslate = 0;
+	m_nTotalTranslate = 0;
+	m_nTranslate = 0;
 
 	int p = 0;
 
@@ -306,7 +314,7 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 	{
 		for (auto& message : context.messages)
 		{
-			nTotalTranslate += 1;
+			m_nTotalTranslate += 1;
 		}
 	}
 
@@ -332,8 +340,6 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 			for (auto& t : tList)
 			{
 				dList.push_back(t);
-				//QThread::msleep(20);
-				//emit __translateInfoChanged(nTranslate, nTotalTranslate, s, t);
 			}
 
 			///emit
@@ -342,9 +348,9 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 				auto iterT = tList.begin();
 				while (iterS != waitList.end() && iterT != tList.end())
 				{
-					nTranslate += 1;
+					// nTranslate += 1;
 					QThread::msleep(40);
-					emit __translateInfoChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
+					// emit __translateInfoChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
 					iterS++;
 					iterT++;
 				}
@@ -370,9 +376,9 @@ void __Xml::__translate(QString sourceLang, QString targetLang)
 			auto iterT = tList.begin();
 			while (iterS != waitList.end() && iterT != tList.end())
 			{
-				nTranslate += 1;
+				// nTranslate += 1;
 				QThread::msleep(40);
-				emit __translateInfoChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
+				// emit __translateInfoChanged(nTranslate, nTotalTranslate, *iterS, *iterT);
 				iterS++;
 				iterT++;
 			}

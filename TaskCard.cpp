@@ -6,69 +6,93 @@
 #include <QApplication>
 #include <thread>
 #include "LogPage.h"
+// #include <FluProgressRing.h>
 //#include <TongYiOpenAi.hpp>
 
 TaskCard::TaskCard(QWidget *parent)
 	: FluWidget(parent)
 {
-	m_vMainLayout = new QVBoxLayout(this);
-	m_hFileLayout = new QHBoxLayout();
-	m_vMainLayout->addLayout(m_hFileLayout);
 
-	m_fileKeyLabel = new FluLabel(FluLabelStyle::BodyTextBlockStyle);
+    // m_vMainLayout = new QVBoxLayout(this);
+    m_hMainLayout = new QHBoxLayout;
+    m_hMainLayout->setContentsMargins(4 , 4, 4, 4);
+    setLayout(m_hMainLayout);
+    auto wrapInfoWidget = new QWidget;
+    m_hMainLayout->addWidget(wrapInfoWidget, 1);
+
+    auto vWrapInfoWidgetLayout = new QVBoxLayout;
+    vWrapInfoWidgetLayout->setContentsMargins(4,4,4,4);
+    wrapInfoWidget->setLayout(vWrapInfoWidgetLayout);
+
+
+    m_progressRing = new FluProgressRing;
+    m_hMainLayout->addWidget(m_progressRing);
+
+    auto wrapToolButtonWidget = new QWidget;
+    wrapToolButtonWidget->setFixedWidth(30);
+    m_hMainLayout->addWidget(wrapToolButtonWidget);
+
+    auto vWrapToolButtonLayout = new QVBoxLayout;
+    vWrapToolButtonLayout->setContentsMargins(4,4,4,4);
+    wrapToolButtonWidget->setLayout(vWrapToolButtonLayout);
+
+	// m_vMainLayout = new QVBoxLayout(this);
+	m_hFileLayout = new QHBoxLayout();
+	vWrapInfoWidgetLayout->addLayout(m_hFileLayout);
+
+	m_fileKeyLabel = new FluLabel(FluLabelStyle::CaptionTextBlockSylte);
 	m_fileKeyLabel->setText("文件名:");
     m_hFileLayout->addWidget(m_fileKeyLabel);
 
-    m_fileValueLabel = new FluLabel(FluLabelStyle::BodyTextBlockStyle);
+    m_fileValueLabel = new FluLabel(FluLabelStyle::CaptionTextBlockSylte);
 	m_fileValueLabel->setText("*://******/******/******/***.**");
     m_hFileLayout->addWidget(m_fileValueLabel);
     m_hFileLayout->addStretch();
 
     m_languageLayout = new QHBoxLayout;
-    m_vMainLayout->addLayout(m_languageLayout);
+    vWrapInfoWidgetLayout->addLayout(m_languageLayout);
     m_languageKeyLabel = new FluLabel;
-    m_languageKeyLabel->setLabelStyle(FluLabelStyle::BodyTextBlockStyle);
+    m_languageKeyLabel->setLabelStyle(FluLabelStyle::CaptionTextBlockSylte);
     m_languageKeyLabel->setText("语言:");
     m_languageLayout->addWidget(m_languageKeyLabel);
 
     m_languageValueLabel = new FluLabel;
-    m_languageValueLabel->setLabelStyle(FluLabelStyle::BodyTextBlockStyle);
+    m_languageValueLabel->setLabelStyle(FluLabelStyle::CaptionTextBlockSylte);
     m_languageValueLabel->setText("英文 => 中文");
     m_languageLayout->addWidget(m_languageValueLabel);
     m_languageLayout->addStretch();
 
     m_hTranslatingLayout = new QHBoxLayout();
-    m_vMainLayout->addLayout(m_hTranslatingLayout);
-    m_translatingLabel = new FluLabel(FluLabelStyle::BodyTextBlockStyle);
+    vWrapInfoWidgetLayout->addLayout(m_hTranslatingLayout);
+    m_translatingLabel = new FluLabel(FluLabelStyle::CaptionTextBlockSylte);
     m_translatingLabel->setText("正在翻译...");
     m_hTranslatingLayout->addWidget(m_translatingLabel);
 
-    auto m_hToolButtonLayout = new QHBoxLayout();
-    m_vMainLayout->addLayout(m_hToolButtonLayout);
+    vWrapInfoWidgetLayout->addStretch();
 
 
     m_startButton = new TaskButton(TaskButtonType::Start);
     m_startButton->setEnabled(true);
     m_startButton->setToolTip("开始翻译...");
-    m_hToolButtonLayout->addWidget(m_startButton);
+    vWrapToolButtonLayout->addWidget(m_startButton);
 
 
     m_pauseButton = new TaskButton(TaskButtonType::pause);
     m_pauseButton->setEnabled(false);
     m_pauseButton->setToolTip("暂停");
-    m_hToolButtonLayout->addWidget(m_pauseButton);
+    vWrapToolButtonLayout->addWidget(m_pauseButton);
 
     m_continueButton  = new TaskButton(TaskButtonType::Continue);
     m_continueButton->setEnabled(false);
     m_continueButton->setToolTip("继续");
-    m_hToolButtonLayout->addWidget(m_continueButton);
+    vWrapToolButtonLayout->addWidget(m_continueButton);
 
     m_stopButton = new TaskButton(TaskButtonType::Stop);
     m_stopButton->setEnabled(false);
     m_stopButton->setToolTip("停止");
-    m_hToolButtonLayout->addWidget(m_stopButton);
+    vWrapToolButtonLayout->addWidget(m_stopButton);
 
-    m_hToolButtonLayout->addStretch();
+    vWrapToolButtonLayout->addStretch();
 
     setFixedHeight(90);
 
@@ -112,9 +136,13 @@ void TaskCard::onClickedStartButton()
             //// 开始执行翻译工作;
             m_xml.__init(m_taskData.HtttpUrl, m_taskData.Token);
             connect(&m_xml, &__Xml::__translateInfoChanged, this, [=](int nTranslate, int nTotalTranslate, QString s, QString t) {
-                
+
+                m_progressRing->setMinMaxValue(0, nTotalTranslate);
+                m_progressRing->setCurValue(nTranslate);
+                m_progressRing->setShowText(true);
+
                 bool isError = s == t;
-                QString sLog = QString::asprintf("翻译: %d/%d:\r\n\t\t %s => \r\n\t\t%s\n", nTranslate, nTotalTranslate, s.toStdString().c_str(), t.toStdString().c_str());
+                QString sLog = QString::asprintf("翻译: %d/%d: %s => %s", nTranslate, nTotalTranslate, s.toStdString().c_str(), t.toStdString().c_str());
                 LogPage::getPage()->appendLog(sLog, isError);
                 
                 

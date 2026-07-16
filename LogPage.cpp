@@ -2,6 +2,7 @@
 #include <FluUtils.h>
 #include <FluLabel.h>
 #include <FluTextEdit.h>
+#include <QScrollBar>
 
 LogPage* LogPage::__page = nullptr;
 LogPage::LogPage(QWidget *parent) : FluWidget(parent)
@@ -40,6 +41,9 @@ void LogPage::appendLog(QString text, bool isError)
     }
 
     m_logWindow->append(text);
+    QTimer::singleShot(0, this, [=](){
+        m_logWindow->verticalScrollBar()->setValue(m_logWindow->verticalScrollBar()->maximum());
+    });
 }
 
 void LogPage::onThemeChanged()

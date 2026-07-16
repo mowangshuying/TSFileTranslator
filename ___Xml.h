@@ -76,4 +76,7 @@ signals:
 public:
     QString __version;
     std::list<Context> __contexts;
+
+    int m_nTranslate;
+    int m_nTotalTranslate;
 };

@@ -3,6 +3,7 @@
 #include "___def.h"
 #include <FluWidget.h>
 #include <FluLabel.h>
+#include <FluProgressRing.h>
 
 class TaskButton;
 class TaskCard  : public FluWidget 
@@ -31,7 +32,7 @@ public:
 	void onThemeChanged();
 
 protected:
-    QVBoxLayout* m_vMainLayout;
+    QHBoxLayout* m_hMainLayout;
     QHBoxLayout* m_hFileLayout;
 
     FluLabel* m_fileKeyLabel;
@@ -47,6 +48,8 @@ protected:
     TaskButton* m_pauseButton;
     TaskButton* m_continueButton;
     TaskButton* m_stopButton;
+
+    FluProgressRing* m_progressRing;
 
     __Xml m_xml; 
     TaskData m_taskData;
