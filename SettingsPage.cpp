@@ -50,7 +50,7 @@ SettingsPage::SettingsPage(QWidget *parent) : FluWidget(parent)
     auto settingsVersionBox = new FluSettingsVersionBox;
     settingsVersionBox->getTitleLabel()->setText("TS文件转换器(Qt)");
     settingsVersionBox->getInfoLabel()->setText("@2026 TS文件转换器(Qt).  版权所有");
-    settingsVersionBox->getVersionLabel()->setText("V1.0.0");
+    settingsVersionBox->getVersionLabel()->setText("V1.0.4");
 
     auto repoLabel = new FluLabel;
     repoLabel->setLabelStyle(FluLabelStyle::BodyTextBlockStyle);
