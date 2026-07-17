@@ -15,6 +15,8 @@ public:
 
     void addTaskCard(TaskData taskData);
 
+    void removeTaskCard(qint64 taskId);
+
     void onThemeChanged();
 protected:
     static TaskViewPage* __page;

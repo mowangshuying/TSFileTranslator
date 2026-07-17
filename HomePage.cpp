@@ -146,6 +146,25 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
     addToTaskListButton->setText("添加至任务列表");
     hAddToTaskLayout->addWidget(addToTaskListButton);
 
+    {
+        /// load settings
+        auto pSettings = FluConfigUtils::getUtils()->getSettings();
+        pSettings->sync();
+        pSettings->beginGroup("config");
+        QString httpUrl = pSettings->value("HttpUrl", "").toString();
+        QString token = pSettings->value("Token").toString();
+        QString sourceFile = pSettings->value("SourceFile").toString();
+        QString sourceLang = pSettings->value("SourceLang").toString();
+        QString targetLang = pSettings->value("TargetLang").toString();
+        pSettings->endGroup();
+
+        httpUrlLineEdit->setText(httpUrl);
+        tokenLineEdit->setText(token);
+        sourceFileLineEidt->setText(sourceFile);
+        sourceLangComboBox->setIndexByText(sourceLang);
+        targetLangComboBox->setIndexByText(targetLang);
+    }
+
     connect(loadSourceFileButton, &FluIconButton::clicked, this, [=]() {
         QFileDialog qfd(this);
         qfd.setFileMode(QFileDialog::ExistingFile);
@@ -183,6 +202,9 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
         pSettings->beginGroup("config");
         pSettings->setValue("HttpUrl", httpUrl);
         pSettings->setValue("Token", token);
+        pSettings->setValue("SourceFile", sourceFileLineEidt->text());
+        pSettings->setValue("SourceLang", sourceLangComboBox->getTextBtn()->text());
+        pSettings->setValue("TargetLang", targetLangComboBox->getTextBtn()->text());
         pSettings->endGroup();
         
         TaskData data;

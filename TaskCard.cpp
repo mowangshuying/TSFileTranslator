@@ -10,6 +10,7 @@
 //#include <TongYiOpenAi.hpp>
 #include <QDir>
 #include <FluUtils.h>
+#include "TaskViewPage.h"
 
 TaskCard::TaskCard(QWidget *parent)
 	: FluWidget(parent)
@@ -31,7 +32,7 @@ TaskCard::TaskCard(QWidget *parent)
     m_hMainLayout->addWidget(m_progressRing);
 
     auto wrapToolButtonWidget = new QWidget;
-    wrapToolButtonWidget->setFixedWidth(30);
+    wrapToolButtonWidget->setFixedWidth(150);
     m_hMainLayout->addWidget(wrapToolButtonWidget);
 
     auto vWrapToolButtonLayout = new QVBoxLayout;
@@ -78,36 +79,25 @@ TaskCard::TaskCard(QWidget *parent)
     vWrapInfoWidgetLayout->addStretch();
 
 
-    m_startButton = new TaskButton(TaskButtonType::Start);
-    m_startButton->setEnabled(true);
-    m_startButton->setToolTip("开始翻译...");
+    m_startButton = new FluPushButton;
+    m_startButton->setFixedWidth(120);
+    m_startButton->setText("开始翻译");
     vWrapToolButtonLayout->addWidget(m_startButton);
 
-
-    m_pauseButton = new TaskButton(TaskButtonType::pause);
-    m_pauseButton->setEnabled(false);
-    m_pauseButton->setToolTip("暂停");
-    vWrapToolButtonLayout->addWidget(m_pauseButton);
-
-    m_continueButton  = new TaskButton(TaskButtonType::Continue);
-    m_continueButton->setEnabled(false);
-    m_continueButton->setToolTip("继续");
-    vWrapToolButtonLayout->addWidget(m_continueButton);
-
-    m_stopButton = new TaskButton(TaskButtonType::Stop);
-    m_stopButton->setEnabled(false);
-    m_stopButton->setToolTip("停止");
-    vWrapToolButtonLayout->addWidget(m_stopButton);
-
+    m_deleteTaskButton = new FluPushButton;
+    m_deleteTaskButton->setFixedWidth(120);
+    m_deleteTaskButton->setText("删除任务");
+    vWrapToolButtonLayout->addWidget(m_deleteTaskButton);
     vWrapToolButtonLayout->addStretch();
 
     setFixedHeight(90);
 
 
-    connect(m_startButton, &TaskButton::clicked, this, &TaskCard::onClickedStartButton);
-    connect(m_pauseButton, &TaskButton::clicked, this, &TaskCard::onClickedPauseButton);
-    connect(m_continueButton, &TaskButton::clicked, this, &TaskCard::onClickedContinueButton);
-    connect(m_stopButton, &TaskButton::clicked, this, &TaskCard::onClickedStopButton);
+    connect(m_startButton, &FluPushButton::clicked, this, &TaskCard::onClickedStartButton);
+    connect(m_deleteTaskButton, &FluPushButton::clicked, this, &TaskCard::onClickedDeleteTaskButton);
+    // connect(m_pauseButton, &TaskButton::clicked, this, &TaskCard::onClickedPauseButton);
+    // connect(m_continueButton, &TaskButton::clicked, this, &TaskCard::onClickedContinueButton);
+    // connect(m_stopButton, &TaskButton::clicked, this, &TaskCard::onClickedStopButton);
 
     onThemeChanged();
     connect(FluThemeUtils::getUtils(), &FluThemeUtils::themeChanged, this, [=](FluTheme theme){
@@ -133,11 +123,6 @@ void TaskCard::setTaskData(TaskData taskData)
 
 void TaskCard::onClickedStartButton()
 {
-    m_startButton->setEnabled(false);
-    m_pauseButton->setEnabled(true);
-    m_continueButton->setEnabled(false);
-    m_stopButton->setEnabled(true);
-
     std::thread __thread([=]()
         {
             //// 开始执行翻译工作;
@@ -180,11 +165,6 @@ void TaskCard::onClickedStartButton()
             m_xml.__read(m_taskData.SourceFile);
             if (m_xml.__contexts.empty())
             {
-                /// 翻译结束，重置按钮状态
-                m_startButton->setEnabled(true);
-                m_pauseButton->setEnabled(false);
-                m_continueButton->setEnabled(false);
-                m_stopButton->setEnabled(false);
                 return;
             }
 
@@ -210,40 +190,14 @@ void TaskCard::onClickedStartButton()
             m_outPutFileLabel->setText(sOutOutFileNameLog);
             LogPage::getPage()->appendLog(sOutOutFileNameLog);
             m_xml.__write(fileName);
-
-            ///// 翻译完成重置按钮状态
-            //m_startButton->setEnabled(true);
-            //m_pauseButton->setEnabled(false);
-            //m_continueButton->setEnabled(false);
-            //m_stopButton->setEnabled(false);
         });
     __thread.detach();
 
 }
 
-void TaskCard::onClickedPauseButton()
+void TaskCard::onClickedDeleteTaskButton()
 {
-    /// set state;
-    m_startButton->setEnabled(false);
-    m_pauseButton->setEnabled(false);
-    m_continueButton->setEnabled(true);
-    m_stopButton->setEnabled(true);
-}
-
-void TaskCard::onClickedContinueButton()
-{
-    m_startButton->setEnabled(false);
-    m_pauseButton->setEnabled(true);
-    m_continueButton->setEnabled(false);
-    m_stopButton->setEnabled(true);
-}
-
-void TaskCard::onClickedStopButton()
-{
-    m_startButton->setEnabled(true);
-    m_pauseButton->setEnabled(false);
-    m_continueButton->setEnabled(false);
-    m_stopButton->setEnabled(false);
+    TaskViewPage::getPage()->removeTaskCard(m_taskData.id);
 }
 
 void TaskCard::onThemeChanged()

@@ -22,6 +22,8 @@ protected:
 
             QString __configsFilePath = outDirPath + "___configs.db";
             open(__configsFilePath);
+
+            createTaskTable();
     }
 public:
 
@@ -150,37 +152,38 @@ public:
         int num = query.numFields();
         
         TaskData data;
-        for (int i = 0; i < num; i++)
+        while (!query.eof())
         {
-            std::string fieldName = query.fieldName(i);
-            if (fieldName == "id")
+             for (int i = 0; i < num; i++)
             {
-                data.id = query.getInt64Field("id", 0);
-                // continue;
-            }
+                std::string fieldName = query.fieldName(i);
+                if (fieldName == "id")
+                {
+                    data.id = query.getInt64Field("id", 0);
+                    continue;
+                }
 
-            if (fieldName == "source_file")
-            {
-                data.SourceFile = query.getStringField("source_file");
-                // continue;
-            }
+                if (fieldName == "source_file")
+                {
+                    data.SourceFile = query.getStringField("source_file");
+                    continue;
+                }
 
-            if (fieldName == "source_lang")
-            {
-                data.SourceLang = query.getStringField("source_lang");
-                // continue;
-            }
+                if (fieldName == "source_lang")
+                {
+                    data.SourceLang = query.getStringField("source_lang");
+                    continue;
+                }
 
-            if (fieldName == "target_lang")
-            {
-                data.SourceLang = query.getStringField("target_lang");
-                // continue;
-            }
+                if (fieldName == "target_lang")
+                {
+                    data.TargetLang = query.getStringField("target_lang");
+                    datas.push_back(data);
+                    continue;
+                }
 
-            if (i == (num - 1))
-            {
-                datas.push_back(data);
             }
+            query.nextRow();
         }
     }
 protected:

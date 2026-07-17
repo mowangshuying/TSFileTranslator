@@ -4,6 +4,7 @@
 #include <FluWidget.h>
 #include <FluLabel.h>
 #include <FluProgressRing.h>
+#include <FluPushButton.h>
 
 class TaskButton;
 class TaskCard  : public FluWidget 
@@ -14,20 +15,25 @@ public:
 	TaskCard(QWidget *parent = nullptr);
 	~TaskCard();
 
-    void setTaskId(int taskId)
+    // void setTaskId(int taskId)
+    // {
+    //     m_taskId = taskId;
+    // }
+
+    qint64 getTaskId()
     {
-        m_taskId = taskId;
+        return m_taskData.id;
     }
 
     void setTaskData(TaskData taskData);
 
     void onClickedStartButton();
+    void onClickedDeleteTaskButton();
+    // void onClickedPauseButton();
 
-    void onClickedPauseButton();
+    // void onClickedContinueButton();
 
-    void onClickedContinueButton();
-
-    void onClickedStopButton();
+    // void onClickedStopButton();
 
 	void onThemeChanged();
 
@@ -45,10 +51,8 @@ protected:
     FluLabel* m_outPutFileLabel;
 
 
-    TaskButton* m_startButton;
-    TaskButton* m_pauseButton;
-    TaskButton* m_continueButton;
-    TaskButton* m_stopButton;
+    FluPushButton* m_startButton;
+    FluPushButton* m_deleteTaskButton;
 
     FluProgressRing* m_progressRing;
 
