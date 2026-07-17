@@ -42,6 +42,7 @@ protected:
     FluLabel* m_languageValueLabel;
     QHBoxLayout* m_hTranslatingLayout;
     FluLabel* m_translatingLabel;
+    FluLabel* m_outPutFileLabel;
 
 
     TaskButton* m_startButton;

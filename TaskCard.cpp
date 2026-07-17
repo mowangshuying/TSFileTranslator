@@ -8,6 +8,7 @@
 #include "LogPage.h"
 // #include <FluProgressRing.h>
 //#include <TongYiOpenAi.hpp>
+#include <QDir>
 
 TaskCard::TaskCard(QWidget *parent)
 	: FluWidget(parent)
@@ -62,11 +63,16 @@ TaskCard::TaskCard(QWidget *parent)
     m_languageLayout->addWidget(m_languageValueLabel);
     m_languageLayout->addStretch();
 
-    m_hTranslatingLayout = new QHBoxLayout();
-    vWrapInfoWidgetLayout->addLayout(m_hTranslatingLayout);
+    // m_hTranslatingLayout = new QHBoxLayout();
+    // vWrapInfoWidgetLayout->addLayout(m_hTranslatingLayout);
     m_translatingLabel = new FluLabel(FluLabelStyle::CaptionTextBlockSylte);
     m_translatingLabel->setText("正在翻译...");
-    m_hTranslatingLayout->addWidget(m_translatingLabel);
+    vWrapInfoWidgetLayout->addWidget(m_translatingLabel);
+
+    m_outPutFileLabel = new FluLabel(FluLabelStyle::CaptionTextBlockSylte);
+    m_outPutFileLabel->setText("");
+    vWrapInfoWidgetLayout->addWidget(m_outPutFileLabel);
+
 
     vWrapInfoWidgetLayout->addStretch();
 
@@ -135,6 +141,7 @@ void TaskCard::onClickedStartButton()
         {
             //// 开始执行翻译工作;
             m_xml.__init(m_taskData.HtttpUrl, m_taskData.Token);
+            m_outPutFileLabel->setText("");
             connect(&m_xml, &__Xml::__translateInfoChanged, this, [=](int nTranslate, int nTotalTranslate, QString s, QString t) {
 
                 m_progressRing->setMinMaxValue(0, nTotalTranslate);
@@ -181,9 +188,19 @@ void TaskCard::onClickedStartButton()
             m_xml.__translate(sourceLang, targetLang);
 
             //// 结束翻译 应用程序文件夹下的out目录;
-            QString outPath = QApplication::applicationDirPath() + "/out/";
+            QString outDirPath = QApplication::applicationDirPath() + "/outputTS/";
+            QDir __outDir(outDirPath);
+            if (!__outDir.exists())
+            {
+                __outDir.mkdir(outDirPath);
+            }
+
             //// 提取 m_taskData.SourceFile中的文件名并且去除文件扩展名;
-            QString fileName = outPath + QFileInfo(m_taskData.SourceFile).fileName() + "(" + targetLang + ")" + ".ts";
+            QString fileName = outDirPath + QFileInfo(m_taskData.SourceFile).fileName() + "(" + targetLang + ")" + ".ts";
+            
+            QString sOutOutFileNameLog = "输出文件:"+fileName;
+            m_outPutFileLabel->setText(sOutOutFileNameLog);
+            LogPage::getPage()->appendLog(sOutOutFileNameLog);
             m_xml.__write(fileName);
 
             ///// 翻译完成重置按钮状态
