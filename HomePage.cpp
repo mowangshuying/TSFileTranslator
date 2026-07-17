@@ -9,6 +9,8 @@
 #include <FluIconButton.h>
 #include <FluStyleButton.h>
 #include <QFileDialog>
+#include <FluUtils.h>
+#include "___Configs.h"
 
 HomePage* HomePage::__page = nullptr;
 HomePage::HomePage(QWidget *parent) : FluWidget(parent)
@@ -51,7 +53,7 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
 
     auto tokenLabel = new FluLabel;
     tokenLabel->setFixedWidth(80);
-    tokenLabel->setText("Tooken:");
+    tokenLabel->setText("Token:");
     tokenLabel->setLabelStyle(FluLabelStyle::BodyTextBlockStyle);
     hTokonLayout->addWidget(tokenLabel);
 
@@ -60,7 +62,6 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
     tokenLineEdit->setText("");
     tokenLineEdit->setPlaceholderText("请输入API Key");
     hTokonLayout->addWidget(tokenLineEdit);
-
 
     /// sourceFile;
     auto hSourceFileLayout = new QHBoxLayout;
@@ -173,12 +174,22 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
         });
 
     connect(addToTaskListButton, &FluStyleButton::clicked, this, [=](){
+        // TaskData data;
+        QString httpUrl = httpUrlLineEdit->text();
+        QString token = tokenLineEdit->text();
+
+        QSettings* pSettings = FluConfigUtils::getUtils()->getSettings();
+        pSettings->sync();
+        pSettings->beginGroup("config");
+        pSettings->setValue("HttpUrl", httpUrl);
+        pSettings->setValue("Token", token);
+        pSettings->endGroup();
+        
         TaskData data;
-        data.HtttpUrl = httpUrlLineEdit->text();
-        data.Token = tokenLineEdit->text();
         data.SourceFile = sourceFileLineEidt->text();
         data.SourceLang = sourceLangComboBox->getTextBtn()->text();
         data.TargetLang = targetLangComboBox->getTextBtn()->text();
+        ___Configs::getConfig()->addTaskData(data);
         emit clickedAddToTaskListButton(data);
     });
 

@@ -36,11 +36,13 @@ endif()
 
 add_subdirectory(3rdparty/FluentUI)
 add_subdirectory(3rdparty/TongYiOpenAi)
+add_subdirectory(3rdparty/CppSQLite3)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FluentUI/Controls
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FluentUI/Utils
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/TongYiOpenAi/include/TongYiOpenAi
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/CppSQLite3
 )
 
 set(TGT "TSFileTranslator")
@@ -107,6 +109,7 @@ target_link_libraries(${TGT}
     qwindowkit
     qtadvanceddocking-qt6
     ${HV_LIBRARIES}
+    CppSQLite3
 )
 
 else()
@@ -121,6 +124,7 @@ target_link_libraries(${TGT}
     qwindowkit
     qtadvanceddocking-qt5
     ${HV_LIBRARIES}
+    CppSQLite3
 )
 endif()
 

@@ -71,7 +71,6 @@ SettingsPage::SettingsPage(QWidget *parent) : FluWidget(parent)
     settingsVersionBox->getIconLabel()->setPixmap(icon.pixmap(20, 20));
     settingsVersionBox->getIconLabel()->setFixedSize(40, 40);
     vMainLayout->addWidget(settingsVersionBox, 0, Qt::AlignTop);
-    // vMainLayout->addStretch();
 
 
     onThemeChanged();

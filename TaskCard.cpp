@@ -9,6 +9,7 @@
 // #include <FluProgressRing.h>
 //#include <TongYiOpenAi.hpp>
 #include <QDir>
+#include <FluUtils.h>
 
 TaskCard::TaskCard(QWidget *parent)
 	: FluWidget(parent)
@@ -140,7 +141,14 @@ void TaskCard::onClickedStartButton()
     std::thread __thread([=]()
         {
             //// 开始执行翻译工作;
-            m_xml.__init(m_taskData.HtttpUrl, m_taskData.Token);
+            auto pSettings = FluConfigUtils::getUtils()->getSettings();
+            pSettings->sync();
+            pSettings->beginGroup("config");
+            QString httpUrl = pSettings->value("HttpUrl", "").toString();
+            QString token = pSettings->value("Token").toString();
+            pSettings->endGroup();
+            
+            m_xml.__init(httpUrl, token);
             m_outPutFileLabel->setText("");
             connect(&m_xml, &__Xml::__translateInfoChanged, this, [=](int nTranslate, int nTotalTranslate, QString s, QString t) {
 
