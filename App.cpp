@@ -1,7 +1,7 @@
 #include <QApplication>
 #include "TSWindow.h"
 #include <QTranslator>
-
+#include <FluUtils.h>
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
     //{
     //    app.installTranslator(&translator);
     //}
+
+    FluTranslatorUtils::installTranslator(&app, "Controls.zh-CN");
+    
 
     TSWindow w;
     w.show();
