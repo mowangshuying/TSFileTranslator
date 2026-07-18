@@ -152,6 +152,12 @@ HomePage::HomePage(QWidget *parent) : FluWidget(parent)
         pSettings->sync();
         pSettings->beginGroup("config");
         QString httpUrl = pSettings->value("HttpUrl", "").toString();
+        if (httpUrl.isEmpty())
+        {
+            // "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+            httpUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
+        }
+
         QString token = pSettings->value("Token").toString();
         QString sourceFile = pSettings->value("SourceFile").toString();
         QString sourceLang = pSettings->value("SourceLang").toString();
