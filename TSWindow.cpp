@@ -100,7 +100,8 @@ void TSWindow::__initUI()
     
     
     // // m_navView->collapseView();
-    m_navView->onMenuItemClicked();
+    // m_navView->onMenuItemClicked();
+    m_navView->setOnlyCollapseView(true);
 
     __log("TSWindow 窗口初始化完成!");
 
