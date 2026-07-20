@@ -63,6 +63,16 @@ endif()
 
 set_property(TARGET ${TGT} PROPERTY WIN32_EXECUTABLE true)
 
+set(RES_FILES 
+    "res/App.png")
+source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${RES_FILES})
+qt_add_resources(${TGT} "res"
+    PREFIX "/"
+    BASE "."
+    FILES
+    ${RES_FILES}
+)
+
 set(QSS_FILES
     "StyleSheet/light/TSWindow.qss"
     "StyleSheet/dark/TSWindow.qss"

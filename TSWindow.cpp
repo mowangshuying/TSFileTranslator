@@ -21,7 +21,7 @@ TSWindow::TSWindow(QWidget *parent/*= nullptr */) : FluFrameLessWidget(parent)
 void TSWindow::__initUI()
 {
     setWindowTitle("TS文件转换器(Qt)");
-    setWindowIcon(QIcon("./App.png"));
+    setWindowIcon(QIcon(":res/App.png"));
 
     m_titleBar->chromePalette()->setTitleBarActiveBackgroundColor(Qt::transparent);
     m_titleBar->chromePalette()->setTitleBarInactiveBackgroundColor(Qt::transparent);
